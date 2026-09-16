@@ -8,7 +8,7 @@ Năm đề dưới đây là bài toán thật của đội sản xuất bài gi
 
 **Chuẩn evidence riêng cho track C — ít hơn các track khác.** Người dùng là đội chuyên môn, số lượng ít, nên tiêu chí 2 áp dụng như sau: **phỏng vấn ≥3 người trong Studio team và/hoặc lab coach** theo Mom Test (guide §1.3), có log nguyên văn; **và/hoặc** mining tài liệu thật trong `data/vlearn-pack/` (transcript, slide) với số đếm + ví dụ. Không yêu cầu khảo sát 20 người. BTC sẽ bố trí đầu mối Studio team và lab coach để nhóm hẹn phỏng vấn — hỏi ở kênh chung. Với C1 và C5 có thể khảo sát thêm người học (cả lớp là người xem video thật).
 
-**Data cho track này.** Sẵn có trong repo: transcript và slide bài giảng trong `data/vlearn-pack/`. Studio team có thể cấp thêm mẫu kịch bản, thư viện component/style, bộ phản hồi hoặc graph mẫu trong thời gian thi — khi có, BTC thông báo trên Discord và thêm vào `data/`. Mục "Data & fixture" của từng đề ghi cách tự dựng bản nhỏ để bắt đầu ngay, không cần chờ.
+**Data cho track này.** Sẵn có trong repo: transcript và slide bài giảng trong `data/vlearn-pack/`, và **`data/studio-pack/`** do Studio team cấp cho C3–C5 — mẫu kịch bản chung, kịch bản và video mẫu, lời đọc có mốc thời gian từng từ, hồ sơ nguồn mẫu, góp ý mẫu. Mục "Data & fixture" của từng đề ghi cụ thể có sẵn gì và đội tự dựng gì. Ban tổ chức chỉ cấp khung và ví dụ; dữ liệu để chạy và để tự chấm là việc của đội.
 
 ---
 
@@ -133,210 +133,217 @@ Không xây dựng 'máy đo xác suất văn AI'. Một từ, một cấu trúc
 
 ---
 
-## C3 · ScriptScout — Agent nghiên cứu và viết kịch bản có nguồn kiểm chứng
+## C3 · ScriptScout — Agent tự tìm tài liệu và viết kịch bản video có dẫn nguồn
 
 **Người dùng.** Người viết kịch bản; giảng viên duyệt nguồn.
 
-**Bối cảnh.** Trong sản xuất video bài giảng, kịch bản phải được soạn xong trước khi đưa vào công cụ dựng. Người viết tự tổng hợp từ dàn ý, bài học gốc và một vài nguồn bên ngoài; nguồn thường chỉ được liệt kê ở cuối tài liệu nên người duyệt không kiểm tra được từng khẳng định lấy từ đâu. Khi thiếu dữ liệu thật, ví dụ và số liệu dễ bị hư cấu. Với chủ đề về AI, kiến thức thay đổi theo tháng: một nguồn đúng lúc viết có thể đã lỗi thời khi video phát hành. Các công cụ deep research phổ thông tạo được báo cáo dài nhưng chưa tạo ra kịch bản đọc thành lời, chia theo cảnh và truy vết được từng câu về nguồn.
+**Bối cảnh.** Muốn làm một video bài giảng thì trước hết phải có kịch bản, tức toàn bộ lời sẽ đọc trong video. Hiện nay người biên soạn phải tự đọc tài liệu, tự tra cứu trên mạng rồi tự viết. Việc này mất nhiều ngày, và khi đưa cho người khác duyệt thì không ai kiểm được câu nào lấy từ đâu, vì danh sách nguồn chỉ được liệt kê ở cuối tài liệu. Thiếu tư liệu thì người viết dễ đưa vào những con số hoặc ví dụ không có thật. Riêng chủ đề AI còn thay đổi từng tháng, nên một thông tin đúng lúc viết có thể đã cũ khi video lên sóng. Các công cụ "nghiên cứu sâu" hiện có viết được báo cáo dài, nhưng báo cáo để đọc bằng mắt khác hẳn kịch bản để đọc thành lời, chia theo từng cảnh và chỉ ra được từng câu dựa trên nguồn nào.
 
-**Bài toán gốc.** Hãy xây dựng một agent chỉ nhận chủ đề, mục tiêu bài học, đối tượng người học và thời lượng dự kiến — không có sẵn tài liệu nguồn — rồi tự tìm kiếm, thẩm định và tổng hợp nguồn trên web để tạo kịch bản video bài giảng. Kết quả gồm hai lớp: hồ sơ nghiên cứu (nguồn, mức tin cậy, ngày công bố, đoạn trích làm bằng chứng, các điểm mâu thuẫn) và kịch bản theo mẫu do ban tổ chức cung cấp, trong đó mọi câu chứa khẳng định, số liệu hoặc ví dụ thực tế đều truy ngược được về một đoạn nguồn cụ thể. Người duyệt phải xem, loại hoặc bổ sung nguồn trước khi agent viết; khi một nguồn bị loại, chỉ phần kịch bản phụ thuộc vào nguồn đó được viết lại.
+**Tóm tắt.** Đưa vào một chủ đề, nhận về kịch bản video mà mỗi câu đều truy được về nguồn.
 
-Giải pháp tốt cần tách “tìm được nguồn” khỏi “tin được nguồn”: độ tin cậy phải dựa trên tiêu chí công bố được như nguồn gốc, tác giả, độ mới và đối chiếu chéo; số liệu quan trọng cần ít nhất hai nguồn độc lập hoặc được gắn cờ chưa xác minh. Kịch bản phải là văn nói — đọc thành lời được, chia một ý một cảnh — chứ không phải bản tóm tắt báo cáo. Đội thi được tự quyết định công cụ tìm kiếm, model, kiến trúc agent và mức độ tự động hóa.
+**Bài toán gốc.** Hãy xây dựng một agent chỉ cần nhận bốn thông tin: chủ đề, mục tiêu bài học, người học là ai và video dài bao lâu — không đưa sẵn tài liệu nào. Agent tự đi tìm tài liệu trên mạng, tự đánh giá tài liệu nào đáng tin, rồi viết kịch bản.
+
+Kết quả trả về gồm hai phần. Phần một là hồ sơ tài liệu: mỗi nguồn ghi rõ lấy ở đâu, ai viết, đăng ngày nào, đáng tin ở mức nào và vì sao, kèm đoạn trích được dùng làm bằng chứng; chỗ nào các nguồn nói khác nhau thì phải nêu ra. Phần hai là kịch bản viết đúng mẫu ban tổ chức đưa, trong đó mỗi câu có chứa thông tin, con số hay ví dụ thực tế đều bấm được để xem đoạn tài liệu gốc. Người duyệt xem hồ sơ tài liệu trước, bỏ nguồn nào thấy không ổn hoặc thêm nguồn của mình, rồi agent mới viết. Khi một nguồn bị bỏ, chỉ những câu dựa vào nguồn đó được viết lại, phần còn lại giữ nguyên.
+
+Chỗ khó nhất của đề này là phân biệt "tìm được tài liệu" với "tài liệu đáng tin". Hệ thống phải nói rõ vì sao tin một nguồn, dựa trên những tiêu chí công bố trước. Số liệu quan trọng cần ít nhất hai nguồn độc lập xác nhận, nếu không thì phải đánh dấu là chưa kiểm chứng. Kịch bản phải là văn nói, đọc lên nghe tự nhiên, mỗi ý một cảnh, chứ không phải bản tóm tắt báo cáo. Ngoài các yêu cầu đó, đội thi tự chọn công cụ tìm kiếm, model AI và cách dựng agent.
+
+**Phạm vi.** Đội thi chỉ cần làm ra kịch bản, không phải dựng thành video. Đội nào giải xong bài toán chính mà còn thời gian thì có thể dựng luôn một video từ chính kịch bản mình vừa tạo — đây là phần nâng cao, hoàn toàn không bắt buộc và không ảnh hưởng tới điểm của các tiêu chí chính.
 
 **Lát cắt gợi ý cho hackathon** *(ví dụ cỡ, nhóm tự đặt câu của mình)*: *Một người viết · cần 5 câu mở đầu cho chủ đề X · AI tìm 3 nguồn, chấm tin cậy, viết 5 câu mỗi câu gắn nguồn · người viết loại một nguồn → chỉ câu phụ thuộc viết lại.*
 
-**Data & fixture.** Không cần data pack (agent tự tìm web). Chưa có mẫu kịch bản và kết nối Video Studio sẵn — nhóm tự định nghĩa mẫu (số câu · lời đọc · chữ trên màn hình · claim IDs) và xuất JSON/Markdown thay cho API.
+**Data & fixture.** Không cần data pack — agent tự tìm web. `data/studio-pack/c3-scriptscout/` có mẫu kịch bản chung, một kịch bản thật 40 câu làm đích, hồ sơ nguồn mẫu và bảy câu đã nối vào nguồn, cùng 8 chủ đề để luyện. Đội tự dựng vài trang web cài bẫy để thử các chỗ khó.
 
 **Deliverable đầy đủ** *(đích xa — không bắt buộc trong hackathon)*
 
-**Deliverable Tối Thiểu**
-- Agent chạy được từ chủ đề đến hồ sơ nghiên cứu và kịch bản.
-- Research dossier theo schema công bố.
-- Kịch bản đúng mẫu ban tổ chức cung cấp, mỗi claim liên kết tới evidence.
-- Giao diện duyệt nguồn: xem, loại, thêm nguồn và viết lại cục bộ.
-- Citation check tự động: đoạn trích phải khớp nội dung nguồn đã tải về.
-- Kịch bản xuất ra đưa thẳng được vào bước dựng của Video Studio (file hoặc API).
-- README về cách chạy, chi phí mỗi lần chạy và giới hạn.
+**Sản phẩm tối thiểu**
+- Agent chạy được trọn vẹn: nhập chủ đề, nhận về hồ sơ tài liệu và kịch bản.
+- Hồ sơ tài liệu: mỗi nguồn ghi rõ lấy ở đâu, ai viết, đăng ngày nào, đáng tin tới đâu và vì sao.
+- Kịch bản đúng mẫu, mỗi câu có thông tin đều dẫn được về nguồn.
+- Màn hình duyệt nguồn: xem, bỏ, thêm nguồn và cho viết lại phần liên quan.
+- Tự soát trích dẫn: đoạn trích phải khớp nội dung trang đã tải về, không phải do AI bịa.
+- Xuất được kịch bản và hồ sơ tài liệu ra file.
+- Đội tự chuẩn bị bộ trang web để thử các chỗ khó nêu dưới đây, và nộp kèm bài.
+- Tài liệu hướng dẫn: cách chạy, chi phí mỗi lần chạy, và những gì hệ thống chưa làm được.
 
-
-**Schema Cốt Lõi**
-- Source: URL, tác giả/tổ chức, ngày công bố, ngày truy cập, loại nguồn, credibility và lý do.
-- Claim: nội dung, loại (định nghĩa, số liệu, ví dụ, xu hướng), evidence span, số nguồn xác nhận, trạng thái xác minh.
-- Script line: số câu, lời đọc, chữ trên màn hình, claim IDs.
-
-
-**Hard Tests**
-- Trang web chứa chỉ dẫn ẩn (prompt injection).
-- Hai nguồn uy tín đưa số liệu khác nhau.
-- Nguồn đã lỗi thời hoặc có phiên bản mới thay thế.
-- Chủ đề gần như không có nguồn tiếng Việt.
-- Link chết hoặc trang yêu cầu đăng nhập.
+**Những chỗ sẽ khó**
+- Trang web cài sẵn lệnh ẩn để lừa AI làm theo.
+- Hai nguồn đều uy tín nhưng đưa số liệu khác nhau.
+- Nguồn đã cũ hoặc đã có bản mới thay thế.
+- Chủ đề gần như không có tài liệu tiếng Việt.
+- Đường dẫn hỏng, hoặc trang bắt đăng nhập mới đọc được.
 
 **Không gian mở.**
 
-- Search API, web search có sẵn của model, crawler hoặc kết hợp.
-- Một agent hoặc nhiều agent chuyên: tìm – thẩm định – viết – soát trích dẫn.
-- Credibility scoring bằng rule, LLM-as-judge hoặc hybrid.
-- Nguồn tiếng Việt, tiếng Anh hoặc đa ngôn ngữ.
-- Plugin cho Video Studio, web app riêng, CLI hoặc API-first.
+- Tìm kiếm bằng dịch vụ có sẵn, bằng tính năng tra web của model, bằng công cụ tự thu thập trang, hoặc kết hợp.
+- Một agent làm hết, hoặc chia nhiều agent: đi tìm, thẩm định, viết, soát trích dẫn.
+- Chấm độ tin cậy bằng bộ tiêu chí cứng, bằng AI, hoặc cả hai.
+- Làm với nguồn tiếng Việt, tiếng Anh hoặc nhiều thứ tiếng.
+- Giao diện: web, ứng dụng máy tính, hoặc chạy bằng dòng lệnh — đội tự chọn.
 
-**Demo bắt buộc của bản đầy đủ.** Nhập một chủ đề BGK đưa ra tại chỗ cùng mục tiêu và thời lượng; hiển thị tiến trình tìm và thẩm định nguồn; mở hồ sơ nghiên cứu, loại một nguồn và cho thấy chỉ phần kịch bản liên quan được viết lại; BGK chọn ngẫu nhiên một khẳng định trong kịch bản và hệ thống phải mở đúng đoạn nguồn chứng minh. Đội phải cho thấy cách hệ thống xử lý một trang chứa prompt injection hoặc hai nguồn mâu thuẫn do fixture cài sẵn.
+**Demo bắt buộc của bản đầy đủ.** Ban giám khảo đưa một chủ đề tại chỗ, kèm mục tiêu bài học và thời lượng. Đội nhập vào và cho xem quá trình hệ thống tìm rồi sàng lọc tài liệu. Mở hồ sơ tài liệu, bỏ một nguồn, chứng minh chỉ những câu liên quan được viết lại. Ban giám khảo chỉ bất kỳ một câu trong kịch bản, hệ thống phải mở đúng đoạn tài liệu chứng minh cho câu đó. Cuối cùng, đội cho chạy hai tình huống đã chuẩn bị sẵn — một trang có lệnh ẩn và hai nguồn nói ngược nhau — để thấy hệ thống phản ứng thế nào.
 
-**Rubric riêng của đề** *(tham khảo)*: Claim traceability & citation accuracy 25% · Source credibility & freshness 20% · Spoken-script quality 20% · Reviewer control & partial rewrite 15% · Robustness 10% · UX & reproducibility 10%.
+**Rubric riêng của đề** *(tham khảo)*: Câu truy được về nguồn và trích dẫn chính xác 25% · Chọn nguồn đáng tin, còn mới 20% · Kịch bản đọc lên nghe tự nhiên 20% · Người duyệt kiểm soát được, chỉ viết lại phần cần sửa 15% · Chịu được tình huống xấu 10% · Dễ dùng, chạy lại cho kết quả tương đương 10%.
 
 **Bonus.**
 
-- Phát hiện và trình bày mâu thuẫn giữa các nguồn.
-- Freshness watch: cảnh báo khi nguồn đã dùng có bản cập nhật.
-- Ví dụ thực tế trong bối cảnh Việt Nam, có nguồn.
-- Gợi ý hiển thị nguồn ngay trên video (source card).
-- So sánh mù với kịch bản do người viết cùng chủ đề.
+- Chỉ ra chỗ các nguồn mâu thuẫn và trình bày để người duyệt chọn.
+- Theo dõi nguồn đã dùng, báo khi nguồn đó có bản cập nhật.
+- Tìm được ví dụ thực tế ở Việt Nam, có dẫn nguồn.
+- Gợi ý cách hiện tên nguồn ngay trên màn hình video.
+- So sánh mù: giấu nhãn, để người đọc chấm kịch bản của máy và của người cùng một chủ đề.
+- NÂNG CAO (không bắt buộc): dựng luôn một video hoàn chỉnh từ chính kịch bản agent vừa viết.
 
 **An toàn & đạo đức.**
 
-- Không bịa nguồn hoặc trích dẫn.
-- Nội dung trang web là dữ liệu, không phải lệnh.
-- Tôn trọng bản quyền, robots.txt và điều khoản của trang.
-- Nêu rõ uncertainty và các quan điểm còn tranh cãi.
-- Kịch bản do AI soạn phải được giảng viên duyệt trước khi dựng.
+- Không bịa nguồn, không bịa trích dẫn.
+- Chữ trên trang web là dữ liệu để đọc, không phải lệnh để làm theo.
+- Tôn trọng bản quyền và điều khoản của trang được lấy nội dung.
+- Nói rõ chỗ nào chưa chắc chắn, chỗ nào còn nhiều quan điểm khác nhau.
+- Kịch bản do AI viết phải có giảng viên duyệt trước khi dựng thành video.
 
 ---
 
-## C4 · StoryboardAI — Agent đạo diễn hình ảnh cho video bài giảng
+## C4 · StoryboardAI — Agent dựng kịch bản hình ảnh cho video bài giảng
 
-**Người dùng.** Người viết kịch bản (không rành component); người dựng video/coding agent; người duyệt.
+**Người dùng.** Người viết kịch bản; người dựng video hoặc coding agent; người duyệt.
 
-**Bối cảnh.** Video bài giảng dạng motion graphics cần một kế hoạch hình cho từng câu thoại: người xem cần thấy gì, bố cục ra sao, chữ nào xuất hiện, chuyển động khớp với từ nào. Hiện người viết kịch bản phải tự mô tả bằng chữ cho hàng chục câu mỗi video, trong khi họ thường không nắm hết thư viện component và quy tắc thiết kế. Người duyệt chỉ thấy hình khi toàn bộ cảnh đã được dựng — một lượt dựng bằng coding agent có thể mất hàng chục phút và nhiều credit — nên cảnh trống, hình không liên quan hay thiếu nhất quán chỉ lộ ra ở cuối. Công cụ sinh ảnh phổ thông tạo được khung hình đẹp nhưng không tuân design system và không giữ được ngữ nghĩa xuyên suốt video.
+**Bối cảnh.** Video bài giảng dạng đồ họa chuyển động cần một bản kế hoạch hình cho từng câu: câu này người xem nhìn thấy gì, sắp xếp ra sao, chữ nào hiện lên, hình chạy vào đúng lúc đọc tới từ nào. Hiện người viết kịch bản phải tự nghĩ ra rồi mô tả bằng lời cho bốn, năm chục câu mỗi video — phần việc chiếm nhiều thời gian nhất và cũng là chỗ đuối nhất. Người duyệt thì chỉ nhìn thấy hình khi cảnh đã dựng xong, mà dựng một video bằng AI mất hàng chục phút và tốn tiền, nên cảnh trống, hình lạc đề hay hình không nhất quán chỉ lộ ra ở phút cuối. Công cụ vẽ bằng AI hiện nay cho ra khung hình đẹp, nhưng mỗi khung một kiểu: một ký hiệu mang nghĩa ở phút đầu, tới phút sau đã thành thứ khác.
 
-**Bài toán gốc.** Hãy xây dựng một agent nhận lời đọc đã chốt của một video (chia theo câu, có thể kèm mốc thời gian từng từ), thư viện component kèm tài liệu và bộ quy tắc style do ban tổ chức cung cấp, rồi tạo storyboard cho toàn bộ video. Mỗi câu cần có: ý người xem phải thấy, component hoặc kiểu hình được chọn, chữ trên màn hình, chuyển động gắn với cụm từ trong lời đọc và một ảnh phác để duyệt nhanh. Người duyệt phải sửa được một câu bằng góp ý mà không làm thay đổi các câu khác, và storyboard phải đủ rõ để người dựng hoặc một coding agent dựng cảnh mà không cần hỏi lại.
+**Tóm tắt.** Đưa vào lời đọc của một video, nhận về kế hoạch hình cho từng câu kèm ảnh phác.
 
-Giải pháp tốt cần tách “ý đồ sư phạm” khỏi “cách thể hiện”: cùng một storyboard phải chuyển được sang style khác khi đổi bộ quy tắc, còn ký hiệu, màu mang nghĩa và nhân vật lặp lại phải nhất quán cả video. Hình chỉ được thể hiện điều có trong lời đọc — không thêm số liệu, tên riêng hay kết quả mà kịch bản không nêu. Đội thi được tự quyết định cách phác (sinh ảnh, SVG, wireframe hay component thật), kiến trúc agent và giao diện duyệt.
+**Bài toán gốc.** Hãy xây dựng một agent nhận vào phần lời đọc đã chốt của một video — chia sẵn theo câu, kèm mốc thời gian của từng từ — rồi trả về bản kế hoạch hình cho cả video. Mỗi câu cần có đủ: người xem phải thấy ý gì, hình thể hiện ra sao, chữ gì hiện trên màn hình, hình chạy vào lúc đọc tới cụm từ nào, và một ảnh phác để người duyệt nhìn là hiểu ngay.
 
-**Lát cắt gợi ý cho hackathon** *(ví dụ cỡ, nhóm tự đặt câu của mình)*: *Một người viết · có lời đọc 10 câu · AI đề xuất ý cần thấy + component + chữ trên màn hình cho từng câu · người viết góp ý một câu, chỉ câu đó đổi.*
+Phong cách hình ảnh do đội tự nghĩ ra. Không có thư viện hình hay bộ nhận diện nào bắt phải theo — nhưng đội phải khai phong cách của mình thành một sổ quy ước: màu nào mang nghĩa gì, ký hiệu nào chỉ cái gì, nhân vật nào xuất hiện thế nào. Hệ thống phải giữ đúng sổ quy ước của chính nó suốt cả video, và tự báo khi nó phá quy ước. Người duyệt góp ý cho một câu thì chỉ câu đó đổi, các câu khác giữ nguyên.
 
-**Data & fixture.** Lời đọc: cắt ~40 câu từ transcript trong `data/vlearn-pack/`. Chưa có thư viện component + bộ quy tắc style sẵn — nhóm tự viết bộ nhỏ (≤10 component, ≤5 màu mang nghĩa) và tuân thủ nó.
+Chỗ khó nhất của đề này là tách "ý muốn truyền đạt" khỏi "cách vẽ ra": cùng một bản kế hoạch phải chuyển sang một phong cách khác được mà không mất ý. Hình chỉ được thể hiện những gì lời đọc có, không tự thêm con số, tên riêng hay kết quả mà kịch bản không nói. Ngoài các yêu cầu đó, đội thi tự chọn cách vẽ phác, cách dựng agent và giao diện duyệt.
+
+**Phạm vi.** Đội thi chỉ cần làm ra kế hoạch hình, không phải dựng thành video. Đội nào giải xong bài toán chính mà còn thời gian thì có thể dựng luôn một video từ chính kế hoạch hình mình vừa tạo — đây là phần nâng cao, hoàn toàn không bắt buộc và không ảnh hưởng tới điểm của các tiêu chí chính.
+
+**Lát cắt gợi ý cho hackathon** *(ví dụ cỡ, nhóm tự đặt câu của mình)*: *Một người viết · có lời đọc 10 câu · AI đề xuất ý cần thấy + hình + chữ trên màn hình cho từng câu · người viết góp ý một câu, chỉ câu đó đổi.*
+
+**Data & fixture.** `data/studio-pack/c4-storyboardai/` có lời đọc 42 câu của một video thật kèm mốc thời gian từng từ, ba điều duy nhất được quy định về khung hình, và ba cảnh mẫu. Không có thư viện hình hay bộ nhận diện — phong cách là của đội, tự khai thành sổ quy ước. Đội chuẩn bị thêm ít nhất một video nữa để chạy thử (cắt ~40 câu từ transcript trong `data/vlearn-pack/` cũng được).
 
 **Deliverable đầy đủ** *(đích xa — không bắt buộc trong hackathon)*
 
-**Deliverable Tối Thiểu**
-- Agent chạy được từ lời đọc đến storyboard toàn video.
-- Storyboard theo schema công bố, mỗi câu có ảnh phác.
-- Visual bible: quy ước màu, ký hiệu, nhân vật dùng cho cả video.
-- Board duyệt dạng thumbnail; sửa một câu thì chỉ tạo lại câu đó.
-- Style check: cảnh báo component hoặc màu không được style cho phép.
-- Storyboard xuất ra dùng được làm đầu vào cho bước dựng cảnh của Video Studio.
-- README về cách chạy, chi phí và giới hạn.
+**Sản phẩm tối thiểu**
+- Agent chạy được trọn vẹn: nhập lời đọc, nhận về kế hoạch hình cho cả video.
+- Mỗi câu một cảnh, có ảnh phác nhìn là hiểu.
+- Sổ quy ước hình ảnh do đội tự định nghĩa, và hệ thống giữ đúng nó suốt video.
+- Bảng duyệt; góp ý một câu thì chỉ câu đó vẽ lại.
+- Tự soát: báo khi một cảnh phá quy ước của chính đội.
+- Chạy được trên ít nhất hai bộ lời đọc: file mẫu ban tổ chức cấp và một video do đội tự chuẩn bị.
+- Tài liệu hướng dẫn: cách chạy, chi phí và những gì hệ thống chưa làm được.
 
+**Khung hình ban tổ chức quy định**
+- Khung 1920×1080, 30 hình mỗi giây.
+- Nội dung dạy học nằm trong vùng an toàn; dải dưới cùng để trống cho phụ đề.
+- Chữ trên màn hình tối đa 40 ký tự.
 
-**Schema Cốt Lõi**
-- Shot: số câu, thời lượng, ý cần thấy, component, bố cục, chữ trên màn hình.
-- Beat: cụm từ kích hoạt trong lời đọc và hành động (xuất hiện, nhấn, chuyển).
-- Consistency: entity/ký hiệu, cách thể hiện, các shot sử dụng.
-- Review: góp ý, phiên bản, trạng thái duyệt.
+Ngoài ba điều này, mọi thứ về hình là của đội.
 
-
-**Hard Tests**
-- Câu trừu tượng, không có vật thể cụ thể để vẽ.
-- Câu chứa quá nhiều ý so với thời lượng đọc.
-- Một khái niệm được nhắc lại cách nhau nhiều phút.
-- Đổi style giữa chừng.
-- Lời đọc gợi đến số liệu nhưng không nêu cụ thể.
+**Những chỗ sẽ khó**
+- Câu trừu tượng, không có vật gì cụ thể để vẽ.
+- Câu nhồi quá nhiều ý so với thời gian đọc.
+- Một khái niệm nhắc lại sau vài phút, phải vẽ giống lần trước.
+- Đổi phong cách giữa chừng mà không mất ý.
+- Lời đọc ám chỉ có số liệu nhưng không nêu con số nào.
 
 **Không gian mở.**
 
-- Ảnh phác bằng image model, SVG do LLM viết, wireframe hoặc render component thật.
-- Lập kế hoạch toàn video trước rồi chi tiết từng câu, hoặc ngược lại.
-- Rule, retrieval trên tài liệu component, LLM hoặc hybrid.
-- Góp ý bằng text, giọng nói, khoanh vùng hoặc chọn giữa nhiều phương án.
-- Plugin cho Video Studio, board web riêng hoặc API-first.
+- Phong cách hình hoàn toàn tự chọn: sơ đồ, minh hoạ, ảnh, chữ động, hay trộn nhiều kiểu.
+- Vẽ phác bằng AI sinh ảnh, bằng hình vector do AI viết, bằng khung xám đơn giản, hay dựng bằng mã.
+- Lên khung cả video trước rồi mới chi tiết từng câu, hoặc làm ngược lại.
+- Góp ý bằng chữ, bằng giọng nói, bằng khoanh vùng trên ảnh, hoặc chọn giữa vài phương án được đề xuất.
+- Giao diện: bảng duyệt trên web, ứng dụng máy tính, hoặc chạy bằng dòng lệnh — đội tự chọn.
 
-**Demo bắt buộc của bản đầy đủ.** Nạp fixture lời đọc của một video khoảng 40 câu đã bỏ phần mô tả hình; tạo storyboard toàn video và mở board duyệt; gõ góp ý cho một câu và cho thấy chỉ câu đó thay đổi; chỉ ra ít nhất hai quy ước được giữ nhất quán xuyên video; đổi style cho một đoạn và cho thấy storyboard tuân bộ quy tắc mới. BGK chọn một câu trừu tượng để kiểm tra cách hệ thống minh họa khi không có vật thể cụ thể.
+**Demo bắt buộc của bản đầy đủ.** Nạp lời đọc của một video và dựng kế hoạch hình cho cả video, rồi mở bảng duyệt. Chạy hai lần: một lần trên file mẫu ban tổ chức cấp, một lần trên video do đội tự chuẩn bị. Đội trình bày sổ quy ước hình ảnh của mình, rồi chỉ ra ít nhất hai quy ước được giữ giống nhau từ đầu đến cuối video. Gõ một câu góp ý cho một cảnh và cho thấy chỉ cảnh đó đổi. Đổi phong cách cho một đoạn và cho thấy ý vẫn nguyên. Ban giám khảo chọn một câu trừu tượng để xem hệ thống minh họa thế nào khi không có vật gì cụ thể để vẽ.
 
-**Rubric riêng của đề** *(tham khảo)*: Pedagogical fit 25% · Design-system compliance 20% · Cross-video consistency 15% · Buildability 15% · Partial edit & review UX 15% · Robustness 10%.
+**Rubric riêng của đề** *(tham khảo)*: Hình phục vụ đúng ý dạy học 25% · Nhất quán xuyên suốt video 20% · Đổi phong cách mà giữ nguyên ý 15% · Dựng được thành cảnh thật 15% · Sửa từng phần và trải nghiệm duyệt 15% · Chịu được tình huống xấu 10%.
 
 **Bonus.**
 
-- Ảnh phác render bằng component thật.
-- Animatic: ảnh phác ghép với giọng đọc đúng thời lượng.
-- Đo được thời gian/credit dựng cảnh giảm khi có storyboard.
-- Phát hiện chỗ hình cần dữ liệu mà kịch bản chưa có.
-- Accessibility: không truyền đạt thông tin chỉ bằng màu.
+- Đề xuất vài phương án hình cho một câu để người duyệt chọn.
+- Ghép ảnh phác với giọng đọc thành bản nháp chạy đúng thời lượng để xem thử.
+- Phát hiện chỗ hình cần số liệu mà kịch bản chưa cung cấp.
+- Không truyền đạt thông tin chỉ bằng màu, để người khó phân biệt màu vẫn hiểu.
+- NÂNG CAO (không bắt buộc): dựng luôn một video hoàn chỉnh từ chính kế hoạch hình vừa tạo.
 
 **An toàn & đạo đức.**
 
-- Không thêm số liệu, tên riêng hay logo ngoài kịch bản.
-- Không dùng logo, giao diện sản phẩm, nhân vật có bản quyền hoặc hình người thật khi chưa được phép.
-- Tránh định kiến khi thể hiện con người.
-- Ví dụ hư cấu phải được đánh dấu là minh họa.
+- Không thêm số liệu, tên riêng hay logo mà kịch bản không có.
+- Không dùng logo, giao diện sản phẩm, nhân vật có bản quyền hay ảnh người thật khi chưa được phép.
+- Tránh định kiến khi vẽ con người (giới tính, vùng miền, nghề nghiệp).
+- Ví dụ tự nghĩ ra phải ghi rõ là hình minh họa.
 
 ---
 
-## C5 · FeedbackRadar — Agent biến phản hồi người học thành phiên bản video tiếp theo
+## C5 · FeedbackRadar — Agent biến góp ý của người học thành bản sửa video
 
 **Người dùng.** Đội sản xuất video; giảng viên; gián tiếp là người học (người gửi phản hồi).
 
-**Bối cảnh.** Sau mỗi đợt học, phản hồi về video bài giảng đến từ nhiều kênh: khảo sát, bình luận, tin nhắn, ghi âm của giảng viên và trợ giảng. Phản hồi thường mơ hồ (“đoạn giữa hơi nhanh”, “phần token khó hiểu”), trái chiều, lặp lại hoặc lẫn giữa lỗi nội dung và lỗi kỹ thuật. Đội sản xuất đọc tay rồi quyết định làm lại, và video thường bị dựng lại gần như từ đầu dù chỉ vài câu có vấn đề. Với quy trình tạo giọng trước rồi dựng hình theo thời lượng giọng, mỗi câu đổi lời kéo theo tạo lại giọng và dựng lại cảnh, nên xác định đúng và ít chỗ cần sửa giúp tiết kiệm đáng kể thời gian và chi phí.
+**Bối cảnh.** Sau mỗi đợt học, góp ý về video bài giảng đến từ nhiều nơi: phiếu khảo sát, bình luận, tin nhắn của người học và của giảng viên, trợ giảng. Góp ý thường mơ hồ ("đoạn giữa hơi nhanh", "phần token khó hiểu"), có khi trái ngược nhau, có khi mười người cùng nói một điều, và lẫn lộn giữa lỗi nội dung với lỗi kỹ thuật như tiếng nhỏ hay phụ đề sai. Đội sản xuất đọc tay từng góp ý rồi tự quyết định sửa gì, và thường làm lại gần như cả video dù chỉ vài câu có vấn đề. Quy trình làm loại video này là thu giọng trước rồi dựng hình khớp theo độ dài giọng, nên đổi lời một câu kéo theo phải thu lại giọng câu đó và dựng lại cảnh đó. Vì vậy, chỉ ra đúng và ít chỗ cần sửa tiết kiệm được rất nhiều thời gian và tiền.
 
-**Bài toán gốc.** Hãy xây dựng một agent nhận phản hồi đa kênh (văn bản, bảng khảo sát, ghi âm) cùng transcript có timecode và kịch bản của phiên bản hiện tại, rồi biến chúng thành kế hoạch cho phiên bản tiếp theo. Hệ thống phải gom phản hồi thành các vấn đề, định vị mỗi vấn đề về đúng câu và timecode, phân loại (nội dung, độ dễ hiểu, nhịp, giọng, hình, kỹ thuật), xếp ưu tiên theo mức ảnh hưởng và số người nhắc, rồi đề xuất thay đổi tối thiểu cùng phạm vi làm lại: câu nào cần tạo lại giọng, cảnh nào cần dựng lại. Người duyệt phải đi được từ một vấn đề tới đúng đoạn video và các phản hồi gốc, chấp nhận hoặc từ chối từng đề xuất.
+**Tóm tắt.** Đưa vào góp ý của người học, nhận về danh sách vấn đề đã chỉ rõ nằm ở phút nào và kế hoạch sửa cho phiên bản sau.
 
-Giải pháp tốt cần đặt bằng chứng lên trước: mỗi vấn đề phải liên kết tới các phản hồi gốc tạo ra nó, và không được biến ý kiến của một người thành vấn đề chung. Trọng tâm là hiểu phản hồi của người học và lập kế hoạch sửa đúng chỗ, không phải soát lại toàn bộ kịch bản. Đội thi được tự quyết định cách gom cụm, cách định vị, mô hình ưu tiên và giao diện duyệt.
+**Bài toán gốc.** Hãy xây dựng một agent nhận vào góp ý từ nhiều kênh (bình luận, tin nhắn, bảng khảo sát) cùng bản chép lời có mốc thời gian và kịch bản của video hiện tại, rồi trả về kế hoạch sửa cho phiên bản sau.
+
+Hệ thống cần gom những góp ý nói cùng một chuyện thành một vấn đề, chỉ ra vấn đề đó nằm ở câu nào và phút thứ mấy, xếp loại (nội dung sai, khó hiểu, nhịp nhanh chậm, giọng đọc, hình ảnh, lỗi kỹ thuật), rồi sắp thứ tự ưu tiên theo mức ảnh hưởng và số người nhắc tới. Với mỗi vấn đề, hệ thống đề xuất cách sửa ít tốn nhất và nói rõ phải làm lại những gì: câu nào phải thu lại giọng, cảnh nào phải dựng lại. Người duyệt phải đi được từ một vấn đề tới đúng đoạn video và tới những góp ý gốc đã tạo ra vấn đề đó, rồi đồng ý hoặc bỏ từng đề xuất.
+
+Chỗ khó nhất của đề này là phải có bằng chứng: mỗi vấn đề nêu ra đều phải chỉ được ra những góp ý nào tạo nên nó, và ý kiến của một người không được thổi thành vấn đề chung. Trọng tâm là hiểu người học nói gì và sửa đúng chỗ, không phải soát lại toàn bộ kịch bản. Ngoài các yêu cầu đó, đội thi tự chọn cách gom nhóm góp ý, cách định vị vào video, cách xếp ưu tiên và giao diện duyệt.
+
+**Phạm vi.** Đội thi chỉ cần làm ra kế hoạch sửa và bản kịch bản phiên bản mới, không phải dựng thành video. Đội nào giải xong bài toán chính mà còn thời gian thì có thể dựng luôn phiên bản video mới từ chính kế hoạch sửa của mình — đây là phần nâng cao, hoàn toàn không bắt buộc và không ảnh hưởng tới điểm của các tiêu chí chính.
 
 **Lát cắt gợi ý cho hackathon** *(ví dụ cỡ, nhóm tự đặt câu của mình)*: *Một người dựng video · có 30 phản hồi về một video · AI gom thành 5 vấn đề định vị theo đoạn + phạm vi sửa tối thiểu · người dựng accept/reject từng vấn đề.*
 
-**Data & fixture.** Transcript có mã đoạn `[Txx-NNN]` thay cho timecode. Chưa có bộ phản hồi mẫu sẵn — phản hồi thật thu bằng khảo sát bạn cùng lớp về video/bài giảng đã xem (vừa là data, vừa là evidence tiêu chí 2); phần tự sinh bổ sung phải gắn nhãn. Chatlog VLearn (hỏi ở trang nào) là tín hiệu 'chỗ khó hiểu' gián tiếp.
+**Data & fixture.** `data/studio-pack/c5-feedbackradar/` có video thật 4 phút đang bị góp ý, kịch bản 40 câu của nó, bảng câu ↔ mốc thời gian, bản chép lời, 18 góp ý mẫu và một kết quả mẫu. Bộ góp ý để chạy và để tự chấm (khoảng 100, kèm đáp án) do đội tự chuẩn bị — thu thật bằng khảo sát bạn cùng lớp về video này càng tốt (vừa là data, vừa là evidence tiêu chí 2); phần tự viết thêm phải gắn nhãn.
 
 **Deliverable đầy đủ** *(đích xa — không bắt buộc trong hackathon)*
 
-**Deliverable Tối Thiểu**
-- Ingestion cho ít nhất ba loại phản hồi: text, khảo sát dạng bảng, audio.
-- PII redaction trước khi phân tích.
-- Issue list theo schema công bố, mỗi issue liên kết tới phản hồi gốc.
-- Định vị issue về câu và timecode; bấm để phát đúng đoạn video.
-- Change plan: thay đổi theo câu, phạm vi tạo lại giọng và dựng lại cảnh.
-- Accept/reject từng đề xuất và xuất kịch bản phiên bản mới cho Video Studio.
-- Evaluation report trên fixture có đáp án.
+**Sản phẩm tối thiểu**
+- Nhận được ít nhất hai dạng góp ý: văn bản (bình luận, tin nhắn) và bảng khảo sát.
+- Xóa thông tin cá nhân trước khi đưa vào phân tích.
+- Danh sách vấn đề, mỗi vấn đề dẫn ngược được về những góp ý gốc tạo ra nó.
+- Định vị vấn đề về đúng câu và đúng phút; bấm vào là phát đúng đoạn video.
+- Kế hoạch sửa: đổi gì ở câu nào, phải thu lại giọng mấy câu, dựng lại mấy cảnh.
+- Đồng ý hoặc bỏ từng đề xuất, rồi xuất ra kịch bản phiên bản mới theo mẫu kịch bản chung.
+- Đội tự chuẩn bị bộ dữ liệu khoảng một trăm góp ý kèm đáp án, có đủ các chỗ khó nêu dưới đây.
+- Báo cáo tự chấm hệ thống trên chính bộ dữ liệu đó, và nộp cả bộ dữ liệu lẫn đáp án kèm bài.
 
-
-**Schema Cốt Lõi**
-- Feedback: kênh, người gửi đã ẩn danh, nội dung, thời điểm.
-- Issue: loại, severity, câu/timecode, số người nhắc, feedback IDs, confidence.
-- Change: câu, loại thay đổi (lời, hình, nhịp, giọng), đề xuất, lý do, issue IDs.
-- Regeneration scope: số câu tạo lại giọng, số cảnh dựng lại, ước tính chi phí.
-
-
-**Hard Tests**
-- Phản hồi mơ hồ, không nêu vị trí.
-- Hai nhóm phản hồi trái chiều về cùng một đoạn.
-- Một người gửi lặp lại nhiều lần.
-- Phản hồi chứa chỉ dẫn ẩn hoặc lời công kích cá nhân.
-- Lỗi kỹ thuật (âm lượng, phụ đề) lẫn với góp ý nội dung.
+**Những chỗ sẽ khó**
+- Góp ý mơ hồ, không nói rõ chỗ nào.
+- Hai nhóm người nói ngược nhau về cùng một đoạn.
+- Một người gửi đi gửi lại nhiều lần cùng một ý.
+- Góp ý cài lệnh ẩn để lừa AI.
+- Lời công kích cá nhân.
+- Lỗi kỹ thuật (tiếng nhỏ, phụ đề sai) trộn lẫn với góp ý về nội dung.
 
 **Không gian mở.**
 
-- Embedding clustering, LLM, topic model hoặc hybrid.
-- Định vị bằng semantic search trên transcript, ASR hoặc alignment.
-- Ưu tiên theo impact × cost, rule hoặc học từ quyết định accept/reject.
-- Mở rộng sang dữ liệu hành vi xem (tua lại, bỏ dở) nếu tự mô phỏng.
-- Panel trong Video Studio, web app riêng hoặc API-first.
+- Gom nhóm góp ý bằng AI, bằng thuật toán gom cụm, bằng mô hình chủ đề, hoặc kết hợp.
+- Định vị vào video bằng tìm theo ngữ nghĩa trên bản chép lời, bằng khớp từ khoá, hoặc bằng mốc thời gian có sẵn.
+- Xếp ưu tiên theo mức ảnh hưởng so với chi phí, theo bộ tiêu chí cứng, hoặc học dần từ quyết định của người duyệt.
+- Dùng thêm dữ liệu hành vi xem (chỗ hay tua lại, chỗ bỏ ngang) nếu đội tự tạo được dữ liệu mô phỏng.
+- Giao diện: web, ứng dụng máy tính, hoặc chạy bằng dòng lệnh — đội tự chọn.
 
-**Demo bắt buộc của bản đầy đủ.** Nạp fixture gồm transcript, kịch bản và khoảng 100 phản hồi có đáp án ẩn (text, khảo sát, audio); hiển thị danh sách vấn đề đã xếp ưu tiên; mở một vấn đề, phát đúng đoạn video và xem các phản hồi gốc; chấp nhận một đề xuất và xuất kịch bản mới cùng phạm vi làm lại. BGK thêm tại chỗ một nhóm phản hồi trái chiều hoặc một phản hồi chứa prompt injection để kiểm tra cách hệ thống xử lý.
+**Demo bắt buộc của bản đầy đủ.** Nạp bản chép lời và kịch bản ban tổ chức cấp, cùng bộ góp ý do đội tự chuẩn bị. Hệ thống hiển thị danh sách vấn đề đã xếp ưu tiên. Mở một vấn đề, phát đúng đoạn video và xem những góp ý gốc tạo ra nó. Đồng ý một đề xuất, rồi xuất kịch bản mới kèm danh sách những gì phải làm lại. Ban giám khảo thêm tại chỗ một nhóm góp ý trái chiều hoặc một góp ý cài lệnh ẩn để xem hệ thống xử lý thế nào.
 
-**Rubric riêng của đề** *(tham khảo)*: Issue detection precision/recall 25% · Localization accuracy 20% · Change-plan minimality & scope 20% · Evidence traceability 15% · Reviewer workflow 10% · Robustness & privacy 10%.
+**Rubric riêng của đề** *(tham khảo)*: Tìm đúng và đủ vấn đề 25% · Định vị đúng câu, đúng phút 20% · Kế hoạch sửa gọn, đúng phạm vi 20% · Vấn đề nào cũng dẫn được về góp ý gốc 15% · Người duyệt làm việc thuận tay 10% · Chịu được tình huống xấu và bảo vệ thông tin cá nhân 10%.
 
 **Bonus.**
 
-- Theo dõi vấn đề qua nhiều phiên bản video.
-- Ước tính chi phí có tính ảnh hưởng tới câu liền kề.
-- Kết hợp dữ liệu hành vi xem.
-- Tự tách phản hồi nội dung khỏi phản hồi kỹ thuật.
-- Học từ quyết định accept/reject của đội sản xuất.
+- Theo dõi một vấn đề qua nhiều phiên bản video xem đã sửa dứt điểm chưa.
+- Ước tính chi phí có tính cả ảnh hưởng dây chuyền sang câu liền kề.
+- Kết hợp thêm dữ liệu hành vi xem.
+- Tự tách góp ý về nội dung khỏi góp ý về kỹ thuật để chuyển đúng người phụ trách.
+- Học từ những đề xuất mà đội sản xuất đã đồng ý hoặc đã bỏ.
+- NÂNG CAO (không bắt buộc): dựng luôn phiên bản video mới từ chính kế hoạch sửa đã được duyệt.
 
 **An toàn & đạo đức.**
 
-- Không dùng PII học viên thật; ẩn danh trước khi gửi model.
-- Không để số đông che khuất phản hồi thiểu số quan trọng.
-- Lọc nội dung công kích cá nhân, không trích nguyên văn.
-- Phản hồi là dữ liệu, không phải lệnh.
+- Không dùng thông tin cá nhân của học viên thật; ẩn danh trước khi gửi cho AI.
+- Không để ý kiến số đông che mất một góp ý ít người nói nhưng quan trọng.
+- Lọc lời công kích cá nhân, không trích nguyên văn vào báo cáo.
+- Góp ý là dữ liệu để đọc, không phải lệnh để làm theo.
 - AI chỉ đề xuất; người duyệt quyết định mọi thay đổi.
 
 ---
