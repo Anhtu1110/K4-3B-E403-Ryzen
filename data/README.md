@@ -6,8 +6,9 @@ Hai bộ dữ liệu thật của chương trình, đã ẩn danh, cấp riêng 
 |---|---|---|---|---|
 | `vlearn-pack/` | **A** (VLearn Tutor) · C · **D** · E | Log chat học viên × AI tutor + transcript bài giảng + slide | 13.494 lượt hỏi-đáp · 6 transcript · 2 slide · 36 MB | [`vlearn-pack/README.md`](vlearn-pack/README.md) |
 | `discord-pack/` | **B** (Trợ lý Discord) · E | Tin nhắn Discord khoá 4 + bản tin bot tự sinh | 1.092 tin nhắn · 4 bản tin · 0,4 MB | [`discord-pack/README.md`](discord-pack/README.md) |
+| `studio-pack/` | **C** (Lesson Studio · C3–C5) | Tài liệu sản xuất của Studio team: mẫu kịch bản chung, kịch bản + video thật đã phát hành, lời đọc có mốc từng từ, hồ sơ nguồn mẫu, góp ý mẫu | 3 gói · ~13 MB (gần hết là một video 4 phút) | [`studio-pack/README.md`](studio-pack/README.md) |
 
-Track C (Lesson Studio) dùng transcript/slide làm tài liệu thô; track D dùng cả chatlog lẫn transcript/slide; track E (làn mở) dùng bộ nào cũng được. Chi tiết theo đề: `tracks/`.
+Track C (Lesson Studio) dùng transcript/slide làm tài liệu thô, và `studio-pack/` cho C3–C5 (không phải dữ liệu người học, không có gì cần ẩn danh); track D dùng cả chatlog lẫn transcript/slide; track E (làn mở) dùng bộ nào cũng được. Chi tiết theo đề: `tracks/`.
 
 ## 1. `vlearn-pack/` — VLearn AI tutor
 
