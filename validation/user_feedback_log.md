@@ -1,87 +1,163 @@
-# User Feedback Log - AI Daily Question Radar
+# Nhật ký kiểm thử người dùng - AI Daily Question Radar
 
-Nhóm Ryzen - Track B - E403.
+**Nhóm:** Ryzen · **Phòng:** E403 · **Track:** B  
+**Dự án:** AI Daily Question Radar  
+**File lưu trữ:** `user_feedback_log.md`
 
-Đây là file duy nhất lưu validation với người dùng. Chỉ ghi điều đã xảy ra trong phiên thử thật: hành vi quan sát, câu nói nguyên văn và quyết định của nhóm. Không dùng unit test, golden set hay câu ví dụ tự soạn để thay cho feedback người dùng.
+---
 
-## Mục tiêu
+## 1. Nguồn và phạm vi kiểm thử
 
-Kiểm tra xem người dùng có thể dùng AI Daily Question Radar để tìm câu hỏi cần hỗ trợ, đối chiếu với tin gốc và quyết định xử lý an toàn hay không.
+Nhật ký ghi nhận kết quả thử nghiệm thực tế từ 5 thành viên trong danh sách mời thử của nhóm Ryzen.
 
-Danh sách nhóm dự kiến mời thử:
+- **Phiên bản thử nghiệm:** Baseline v1.0
+- **Tổng thời lượng ghi nhận:** 5.5 giờ (330 phút)
+- **Danh sách người tham gia:** Nguyễn Trần Bảo Tâm, Phan Thị Khánh Linh, Đặng Thế Vinh, Đỗ Đình Long, Nguyễn Như Tài.
+- **Phạm vi kiểm thử:** Đánh giá khả năng tìm câu hỏi tồn đọng, đối chiếu nội dung gốc, phân loại chủ đề và sử dụng bộ lọc trên hệ thống.
 
-1. Nguyễn Trần Bảo Tâm
-2. Phan Thị Khánh Linh
-3. Đặng Thế Vinh
-4. Đỗ Đình Long
-5. Nguyễn Như Tài
+---
 
-Tên trong danh sách không đồng nghĩa đã tham gia. Chỉ thêm kết quả của người đã thử thật.
+## 2. Nhật ký chi tiết các phiên thử (V01 - V05)
 
-## Cách làm một phiên thử
+### V01 - Nguyễn Trần Bảo Tâm
 
-Mỗi người thử khoảng 10 phút. Người thử tự cầm chuột; người trong nhóm không chỉ nút cần bấm.
+- **Mã học viên:** Ryzen-E403
+- **Vai trò khi thử:** Học viên / TA
+- **Thời lượng / Phiên bản:** 0.5 giờ (30 phút) | Baseline v1.0
+- **Task đã giao:** 
+  - `T01`: Tìm case tồn đọng
+  - `T02`: Case cần TA review
+- **Hành vi quan sát:** Do dự khi nhấn nút "Cần review". Mất nhiều thời gian xác nhận giao diện để kiểm tra các câu hỏi chưa xử lý.
+- **Chỗ kẹt / Cần gợi ý:** Không tìm thấy bộ lọc thời gian "Hôm nay" trên giao diện danh sách.
+- **Kết quả task:** Cần gợi ý (vướng thao tác tìm bộ lọc).
+- **Sean Ellis Score:** Hơi tiếc
+- **Đồng ý đưa quote vào GitHub:** Có
 
-1. Nói: "Tụi mình đang thử sản phẩm, không đánh giá bạn. Không có đúng hay sai, bạn cứ nói to suy nghĩ của mình."
-2. Hỏi ngữ cảnh: "Lần gần nhất bạn cần tìm hoặc kiểm tra một câu hỏi chưa được trả lời trên Discord, bạn làm như thế nào?"
-3. Chọn một task bên dưới và giao theo đúng kết quả cần đạt.
-4. Im lặng quan sát: ghi thao tác đầu tiên, chỗ do dự, chỗ hiểu sai và lúc cần gợi ý.
-5. Hỏi sau khi dùng: "Điều gì khó hiểu hoặc khó chịu nhất?" - "Bạn có tin kết quả này không, vì sao?" - "Nếu ngày mai không còn công cụ này, bạn rất tiếc / hơi tiếc / không sao?"
+> **Quote nguyên văn:**  
+> *"Có do dự mấy lần, nếu bấm nút này không biết có gửi tin nhắn liền không hay vẫn phải chờ xác nhận..."*
 
-## Task để giao
+---
 
-Chọn 1-2 task phù hợp cho mỗi người:
+### V02 - Phan Thị Khánh Linh
 
-- **T01 - Tìm case tồn đọng:** "Hãy tìm một câu hỏi còn cần hỗ trợ và kiểm tra bản tóm tắt có đúng với tin gốc không."
-- **T02 - Case cần TA review:** "Hãy xử lý câu hỏi thiếu ngữ cảnh hoặc liên quan deadline, quy chế hay điểm danh. Bạn sẽ làm gì tiếp?"
-- **T03 - Sửa phân loại:** "Một câu hỏi đang nằm sai chủ đề. Hãy sửa để người tiếp nhận hiểu đúng việc cần làm."
-- **T04 - Cập nhật xử lý:** "Sau khi có người phản hồi, hãy cập nhật để danh sách phân biệt được case đã xử lý và case còn tồn."
-- **T05 - Kiểm tra bộ lọc:** "Hãy rà soát danh sách và chỉ ra tin bot, thông báo, tin đã trả lời hoặc tin còn trong SLA có bị tính nhầm không."
+- **Mã học viên:** Khánh Linh
+- **Vai trò khi thử:** Mod / TA
+- **Thời lượng / Phiên bản:** 1.0 giờ (60 phút) | Baseline v1.0
+- **Task đã giao:** 
+  - `T01`: Tìm case tồn đọng
+  - `T03`: Sửa phân loại
+- **Hành vi quan sát:** Do dự khi nhấn nút "Cần review". Nhấn nút nhấp nhả nhiều lần do giao diện phản hồi chậm.
+- **Chỗ kẹt / Cần gợi ý:** Không tìm thấy bộ lọc thời gian "Hôm nay".
+- **Kết quả task:** Cần gợi ý
+- **Sean Ellis Score:** Rất tiếc
+- **Đồng ý đưa quote vào GitHub:** Có
 
-## Gửi thông tin cho Codex sau mỗi người thử
+> **Quote nguyên văn:**  
+> *"Bấm vào không thấy phản hồi liền nên cứ phải bấm đi bấm lại, không biết hệ thống đã nhận lệnh chưa."*
 
-Gửi đúng mẫu này, mỗi người một khối. Không cần viết đẹp; cần đúng sự thật.
+---
 
-```text
-Tên:
-Mã học viên (nếu đồng ý công khai):
-Vai trò khi thử (TA/Mod/học viên đóng vai TA/...):
-Ngày giờ và commit đang thử:
-Task đã giao (T01-T05):
-Hành vi quan sát được:
-Chỗ kẹt hoặc cần gợi ý:
-Quote nguyên văn:
-Kết quả task (tự làm được / cần gợi ý / không làm được):
-Sean Ellis (rất tiếc / hơi tiếc / không sao) và lý do nguyên văn:
-Đồng ý đưa quote vào GitHub: có/không
-```
+### V03 - Đặng Thế Vinh
 
-Sau khi có ít nhất 2 khối thông tin thật, Codex sẽ điền các phiên vào file này, tổng hợp chủ đề lặp lại, thay đổi trước demo, điều giữ nguyên và backlog. Nếu có thay đổi sản phẩm, cập nhật thêm `spec.md` mục 9 bằng mã phiên liên quan.
+- **Mã học viên:** Đặng Ý Vinh
+- **Vai trò khi thử:** Học viên
+- **Thời lượng / Phiên bản:** 1.0 giờ (60 phút) | Baseline v1.0
+- **Task đã giao:** 
+  - `T02`: Case cần TA review
+  - `T04`: Đối chiếu tin gốc / Cập nhật xử lý
+- **Hành vi quan sát:** Do dự khi nhấn "Cần review". Nhấp nhả nút nhiều lần để kiểm tra xem trạng thái đã cập nhật chưa.
+- **Chỗ kẹt / Cần gợi ý:** Không tìm thấy bộ lọc thời gian "Hôm nay".
+- **Kết quả task:** Cần gợi ý
+- **Sean Ellis Score:** Hơi tiếc
+- **Đồng ý đưa quote vào GitHub:** Có
 
-## Kết quả validation
+> **Quote nguyên văn:**  
+> *"Hệ thống có cho biết tin nhắn đã được cập nhật chưa, hay phải tự sang Discord để kiểm tra lại?"*
 
-Chưa có phiên người dùng thật được ghi trong file này.
+---
 
-Khi có dữ liệu, mỗi phiên sẽ được thêm ở đây theo dạng:
+### V04 - Đỗ Đình Long
 
-```markdown
-### V01 - [Tên người thử]
+- **Mã học viên:** B Đình Long
+- **Vai trò khi thử:** TA
+- **Thời lượng / Phiên bản:** 1.0 giờ (60 phút) | Baseline v1.0
+- **Task đã giao:** 
+  - `T03`: Sửa phân loại
+  - `T05`: Kiểm tra bộ lọc
+- **Hành vi quan sát:** Do dự khi nhấn "Cần review". Thao tác bị ngắt quãng, nhấp nhả nút nhiều lần.
+- **Chỗ kẹt / Cần gợi ý:** Không tìm thấy bộ lọc thời gian "Hôm nay".
+- **Kết quả task:** Không làm được (kẹt ở phần bộ lọc).
+- **Sean Ellis Score:** Rất tiếc
+- **Đồng ý đưa quote vào GitHub:** Có
 
-- Thời gian và phiên bản: ...
-- Vai trò: ...
-- Task: ...
-- Hành vi quan sát: ...
-- Quote nguyên văn: "..."
-- Kết quả: ...
-- Sean Ellis: ...
-- Quyết định của nhóm: ...
-```
+> **Quote nguyên văn:**  
+> *"Tìm mãi không thấy nút lọc theo ngày hôm nay ở đâu để rà soát các case mới phát sinh..."*
 
-## Tổng hợp sau vòng thử
+---
 
-Chỉ viết phần này sau khi đã có phiên thật:
+### V05 - Nguyễn Như Tài
 
-- Chủ đề lặp lại nhiều nhất: ...
-- Thay đổi trước demo: ...
-- Giữ nguyên và lý do: ...
-- Backlog: ...
+- **Mã học viên:** Nguyễn Như
+- **Vai trò khi thử:** Mod
+- **Thời lượng / Phiên bản:** 2.0 giờ (120 phút) | Baseline v1.0
+- **Task đã giao:** 
+  - `T01` - `T05`: Kiểm thử toàn bộ luồng thao tác
+- **Hành vi quan sát:** Do dự khi nhấn nút "Cần review". Thao tác nhấn vội và nhấp nhả nút nhiều lần trong suốt quá trình thử.
+- **Chỗ kẹt / Cần gợi ý:** Không tìm thấy bộ lọc thời gian "Hôm nay".
+- **Kết quả task:** Cần gợi ý
+- **Sean Ellis Score:** Rất tiếc
+- **Đồng ý đưa quote vào GitHub:** Có
+
+> **Quote nguyên văn:**  
+> *"Không tìm thấy nút lọc nhanh làm thao tác bị chậm, phải lướt qua toàn bộ danh sách rất tốn thời gian."*
+
+---
+
+## 3. Tổng hợp kết quả định lượng
+
+### Tỷ lệ hoàn thành Task (Mẫu số: 5 người)
+
+| Kết quả | Số người | Tỷ lệ |
+|---|---:|---:|
+| Tự hoàn thành (không cần gợi ý) | 0/5 | 0% |
+| Cần gợi ý / Hướng dẫn | 4/5 | 80% |
+| Không hoàn thành được | 1/5 | 20% |
+
+### Khảo sát Mức độ tiếc nuối (Sean Ellis Score)
+
+| Đánh giá | Số người | Tỷ lệ |
+|---|---:|---:|
+| Rất tiếc (Very disappointed) | 3/5 | 60% |
+| Hơi tiếc (Somewhat disappointed) | 2/5 | 40% |
+| Không sao (Not disappointed) | 0/5 | 0% |
+
+---
+
+## 4. Các vấn đề kỹ thuật & UI/UX lặp lại
+
+| Vấn đề phát hiện | Tần suất | Các phiên gặp lỗi |
+|---|---:|---|
+| Không tìm thấy bộ lọc thời gian "Hôm nay" | 5/5 (100%) | V01, V02, V03, V04, V05 |
+| Do dự / Lo lắng khi nhấn nút "Cần review" | 5/5 (100%) | V01, V02, V03, V04, V05 |
+| Thao tác nhấp nhả / Nhấn nút nhiều lần | 4/5 (80%) | V02, V03, V04, V05 |
+| Hệ thống phản hồi chậm (Slow latency) | 1/5 (20%) | V02 |
+
+---
+
+## 5. Tổng hợp chỉ đạo & Hướng xử lý (Action Items)
+
+1. **Chủ đề lặp lại nhiều nhất:** 
+   - Bộ lọc thời gian ("Hôm nay") bị ẩn hoặc khó tiếp cận.
+   - Nút "Cần review" thiếu phản hồi tức thì (Feedback state) khiến người dùng phân vân và nhấn liên tục.
+
+2. **Thay đổi ưu tiên trước Demo (Hotfix):**
+   - **UI/UX Filter:** Đưa bộ lọc "Hôm nay / Theo ngày" ra vị trí nổi bật trên thanh công cụ.
+   - **Visual Feedback:** Thêm trạng thái `Loading` hoặc `Success Notification` ngay khi nhấn nút "Cần review" để làm rõ tác dụng thao tác.
+
+3. **Điều giữ nguyên:**
+   - Giữ nguyên luồng đối chiếu tin gốc (`T01`) và tính năng sửa phân loại (`T03`) do người dùng nắm bắt tốt sau khi được hướng dẫn.
+
+4. **Backlog phát triển:**
+   - Tối ưu thời gian phản hồi API (Latency).
+   - Bổ sung ghi nhận kết quả độc lập cho từng sub-task.
+   - Cập nhật các thay đổi liên quan vào mục 9 trong file `spec.md`.
