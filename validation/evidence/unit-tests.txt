@@ -1,0 +1,22 @@
+Command: python -m unittest discover -s tests -v
+Commit: b1486a7
+Run date: 2026-09-18
+Runner: Codex, using the repository Python environment in a clean checkout.
+Exit code: 0
+
+test_transitions_and_reclassification_are_persisted (test_case_store.CaseStoreTest.test_transitions_and_reclassification_are_persisted) ... ok
+test_command_is_acknowledged_before_server_scope_check (test_discord_bot.DiscordBotTest.test_command_is_acknowledged_before_server_scope_check) ... ok
+test_case_embed_contains_actionable_context_without_author (test_discord_ui.DiscordUiTest.test_case_embed_contains_actionable_context_without_author) ... ok
+test_jump_url_targets_source_message (test_discord_ui.DiscordUiTest.test_jump_url_targets_source_message) ... ok
+test_summary_embed_displays_sla (test_discord_ui.DiscordUiTest.test_summary_embed_displays_sla) ... ok
+test_view_has_quick_reply_but_no_snooze (test_discord_ui.DiscordUiTest.test_view_has_quick_reply_but_no_snooze) ... ok
+test_announcement_is_filtered (test_radar.RadarRulesTest.test_announcement_is_filtered) ... ok
+test_anonymisation_is_stable_and_hides_author (test_radar.RadarRulesTest.test_anonymisation_is_stable_and_hides_author) ... ok
+test_classifier_retries_only_message_ids_missing_from_a_response (test_radar.RadarRulesTest.test_classifier_retries_only_message_ids_missing_from_a_response) ... ok
+test_reply_graph_and_nearby_response_respect_sla_window (test_radar.RadarRulesTest.test_reply_graph_and_nearby_response_respect_sla_window) ... ok
+test_sensitive_text_is_masked_before_ai_or_ui (test_radar.RadarRulesTest.test_sensitive_text_is_masked_before_ai_or_ui) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.301s
+
+OK

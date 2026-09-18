@@ -1,51 +1,20 @@
-# Nhật ký feedback
+# Ghi nhận đã kiểm chứng
 
-**Trạng thái: chưa có phiên thử thực tế được ghi nhận.**
-V01-V05 dưới đây là chỗ giữ cho các phiên dự kiến, không phải kết quả. Thay nội dung chờ điền bằng dữ liệu thật sau mỗi phiên; có thể thêm dòng nếu một người thử nhiều task.
+Nguồn của bảng này là yêu cầu chỉnh sửa của nhóm, mã nguồn, log API và lượt chạy unit test. Đây không phải bảng quote được gán cho người dùng thử.
 
-## Thông tin phiên
+| Mã | Nguồn thực tế | Ghi nhận | Xử lý / kết luận |
+|---|---|---|---|
+| F01 | Yêu cầu của nhóm ngày 18/09/2026 | Danh sách thiếu Đỗ Đình Long và Nguyễn Như Tài. | Đã thêm hai tên vào danh sách và spec mục 8, tổng cộng 5 người. |
+| F02 | Tài liệu tại commit `b1486a7` và yêu cầu bỏ bảng trống | Các bảng phiên thử/feedback chỉ có ô chờ điền. | Đã bỏ các bảng này, công bố số liệu có log và đặt nội dung minh họa trong file riêng. |
+| F03 | [Lượt API, case C03/C07/C21](../eval/runs/cp3-baseline-20260918/cases.csv) | Ba câu thuộc chủ đề lab bị gán `other`, confidence lần lượt 0,70 / 0,80 / 0,70. | Ghi nhận lỗi phân loại; cần cải thiện định nghĩa chủ đề rồi đo lại. Không có kết quả sau sửa trong lượt này. |
+| F04 | [Log C09-C11 và các nhãn cần rà lại](../eval/runs/cp3-baseline-20260918/cases.csv) | Bộ case thiếu nội dung trả lời để kiểm chứng nhãn ANSWERED; tổng cộng 9 case được đánh dấu rà nhãn. | Giữ cả 25 case trong mẫu số khi báo cáo; nêu hạn chế của nhãn, không loại case khó để tăng tỷ lệ. |
+| F05 | [Unit test trên `b1486a7`](evidence/unit-tests.txt) | 11/11 test đạt, gồm lưu trạng thái, đổi chủ đề, link nguồn, SLA, lọc thông báo và che một số dạng thông tin nhạy cảm. | Ghi nhận các hành vi được test; kết quả này không đo độ hài lòng hoặc độ chính xác AI. |
 
-Mỗi phiên dùng một mã Vxx khớp với bảng feedback.
+## Tổng hợp
 
-| Mã phiên | Ngày giờ / múi giờ | Commit prototype | Trực tiếp hay ảnh/mock? | Kênh thử / SLA | Người ghi chép | Đồng ý công khai quote/minh chứng? |
-|---|---|---|---|---|---|---|
-| V01 | Chưa ghi nhận | Chưa ghi nhận | Chưa ghi nhận | Chưa ghi nhận | Chưa phân công | Chưa xác nhận |
-| V02 | Chưa ghi nhận | Chưa ghi nhận | Chưa ghi nhận | Chưa ghi nhận | Chưa phân công | Chưa xác nhận |
-| V03 | Chưa ghi nhận | Chưa ghi nhận | Chưa ghi nhận | Chưa ghi nhận | Chưa phân công | Chưa xác nhận |
-| V04 | Chưa ghi nhận | Chưa ghi nhận | Chưa ghi nhận | Chưa ghi nhận | Chưa phân công | Chưa xác nhận |
-| V05 | Chưa ghi nhận | Chưa ghi nhận | Chưa ghi nhận | Chưa ghi nhận | Chưa phân công | Chưa xác nhận |
+1. **Vấn đề nổi bật trong log:** phân loại chủ đề lab thành other ở C03/C07/C21 và thiếu bằng chứng cho một số nhãn. Không có số đếm mức lặp từ người dùng thử.
+2. **Thay đổi đã làm:** cập nhật đủ 5 tên, bỏ bảng chờ điền, đính kèm bảng số liệu đã đối chiếu và phân biệt phản hồi minh họa.
+3. **Giữ nguyên có căn cứ:** giữ nhãn gốc, mẫu số 25 và quality bar của spec để báo cáo mức khớp đúng với lần chạy đã lưu.
+4. **Việc tiếp theo từ kết quả:** bổ sung hội thoại trả lời có nguồn, duyệt lại 9 nhãn, cải thiện phân loại chủ đề lab rồi chạy một lượt mới.
 
-## Quan sát và quote
-
-Tên dự kiến ở [kế hoạch](test-plan.md); chỉ điền tên/vai ở bảng này khi phiên đã thực sự diễn ra. Ghi quote đúng nguyên văn, không biến lời diễn giải của nhóm thành lời người thử.
-
-| Mã feedback / phiên | Người thử (tên/vai, ngoài nhóm?, willing user CP1?) | Task đã giao | Quan sát / chỗ kẹt / trợ giúp | Quote nguyên văn | Mức nghiêm trọng | Kết quả task | Quyết định / minh chứng |
-|---|---|---|---|---|---|---|---|
-| FB01 / V01 | Chờ dùng thử | Chưa giao | Chưa ghi nhận | Chưa có | Chưa đánh giá | Chưa thử | Chưa quyết định |
-| FB02 / V02 | Chờ dùng thử | Chưa giao | Chưa ghi nhận | Chưa có | Chưa đánh giá | Chưa thử | Chưa quyết định |
-| FB03 / V03 | Chờ dùng thử | Chưa giao | Chưa ghi nhận | Chưa có | Chưa đánh giá | Chưa thử | Chưa quyết định |
-| FB04 / V04 | Chờ dùng thử | Chưa giao | Chưa ghi nhận | Chưa có | Chưa đánh giá | Chưa thử | Chưa quyết định |
-| FB05 / V05 | Chờ dùng thử | Chưa giao | Chưa ghi nhận | Chưa có | Chưa đánh giá | Chưa thử | Chưa quyết định |
-
-Mức nghiêm trọng: **Chặn** (không hoàn thành hoặc nguy cơ lộ thông tin/sai xử lý), **Cao** (cần trợ giúp hoặc mất nhiều thời gian), **Thấp** (vướng nhỏ, vẫn hoàn thành), **Không có vấn đề**.
-
-Kết quả task: **Tự hoàn thành**, **Hoàn thành khi được trợ giúp**, **Không hoàn thành**, hoặc **Chưa thử**. Với ảnh tĩnh, ghi rõ chỉ đánh giá khả năng hiểu; không ghi thao tác thành công.
-
-Minh chứng có thể là ảnh đã che dữ liệu, đoạn ghi hình hoặc ghi chép được người thử đồng ý. Chỉ thêm link khi đã có tài liệu thật và đã kiểm tra quyền xem.
-
-## Câu trả lời sau khi dùng
-
-Điền cho từng phiên thực tế; nội dung trong ngoặc vuông là chỗ chờ điền.
-
-- Mã phiên: [chưa ghi nhận].
-- Điều khó hiểu/khó chịu nhất, nguyên văn: [chưa có].
-- Mức tin tưởng và lý do, nguyên văn: [chưa có].
-- Có dùng thật không và lý do, nguyên văn: [chưa có].
-- Rất tiếc / hơi tiếc / không sao khi không được dùng nữa, kèm lý do nguyên văn: [chưa có].
-
-## Tổng hợp sau vòng thử
-
-1. **Chủ đề lặp nhiều nhất:** chưa đủ dữ liệu; bổ sung số người gặp và mã feedback liên quan.
-2. **1-2 thay đổi trước demo:** chưa quyết định; ghi mã feedback và liên kết [changelog](changelog.md).
-3. **Giữ nguyên và lý do:** chưa quyết định; cần căn cứ từ quan sát.
-4. **Đưa vào backlog:** chưa xác định; cập nhật slide 6 khi có kết luận.
+[5 câu minh họa](feedback-examples.md) là nội dung soạn theo yêu cầu của nhóm, không dùng làm bằng chứng R6.

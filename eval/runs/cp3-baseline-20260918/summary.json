@@ -1,0 +1,53 @@
+{
+  "source": "Previously recorded API evaluation; independently checked against fixture and per-case decisions on 2026-09-18",
+  "source_results_sha256": "8b5c6a24f86192deed853a8d362f41461028397a53951bba42a3d1b7cc5aa99c",
+  "started_utc": "2026-09-18T08:01:30.168233+00:00",
+  "code_commit": "37ccf7b69103b0d71d11a7558ff837f2acb25468",
+  "model": "gpt-4o-mini-2024-07-18",
+  "completed": true,
+  "elapsed_seconds": 14.361,
+  "api_request_count": 2,
+  "total_tokens": 2517,
+  "all_25": {
+    "total": 25,
+    "status_correct": 12,
+    "status_incorrect": 13,
+    "status_and_topic_correct": 11,
+    "evaluation": {
+      "CAN_XAC_NHAN": 9,
+      "SAI": 5,
+      "DUNG": 11
+    },
+    "predicted_statuses": {
+      "NEEDS_TA_REVIEW": 17,
+      "UNANSWERED": 2,
+      "IGNORED": 6
+    }
+  },
+  "first_20": {
+    "total": 20,
+    "status_correct": 12,
+    "status_incorrect": 8,
+    "status_and_topic_correct": 11,
+    "evaluation": {
+      "CAN_XAC_NHAN": 6,
+      "SAI": 3,
+      "DUNG": 11
+    },
+    "predicted_statuses": {
+      "NEEDS_TA_REVIEW": 13,
+      "UNANSWERED": 2,
+      "IGNORED": 5
+    }
+  },
+  "fixture_sha256": "38bfb587a9a13c10ba95aa5ad88dd46e3e81e9a6785c29211f8953121755721d",
+  "measurement_conditions": [
+    "All messages are 5 hours old (simulated clock).",
+    "Each case is isolated in its own channel.",
+    "All cases treated as root messages; reply_to retained unchanged.",
+    "No fabricated answer messages; no expected labels sent to AI."
+  ],
+  "duplicate_accuracy": null,
+  "duplicate_reason": "No labelled duplicate pairs in fixture.",
+  "publication": "Summary only; message excerpts, source message IDs, response IDs, prompts and raw report are omitted."
+}
