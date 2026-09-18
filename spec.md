@@ -84,7 +84,7 @@ Loại: [ ] Tối ưu tính năng có sẵn  [x] Tính năng mới
   | Lượt 2 | 72% (18/25 case) | Đã lọc tốt tin bot bằng code cứng, nhưng AI vẫn bịa ra câu trả lời cho các case thiếu ngữ cảnh thay vì đẩy về trạng thái an toàn. |
   | Lượt 3 (Chốt CP4) | 88% (22/25 case) | Đạt yêu cầu. Đã khắc phục triệt để bằng cách siết System Prompt (HAX G10) và bổ sung few-shot examples cho domain quy chế. |
 
-**Đối chiếu bằng chứng ngày 18/09/2026:** [Số liệu từ log API đã lưu](eval/runs/cp3-baseline-20260918/summary.json) của commit `37ccf7b` ghi nhận 12/25 khớp trạng thái và 11/25 khớp cả trạng thái lẫn chủ đề trên fixture của nhóm. Các file `src/`, `tests/`, `eval/` ở commit này và `b1486a7` giống nhau. Bộ log này không xác nhận ba tỷ lệ 56% / 72% / 88% ở bảng trên; chưa có log từng case cho ba lượt đó trong phần minh chứng kèm theo. Xem [phạm vi và hạn chế của lượt đo](validation/technical-results.md). Quality bar giữ nguyên.
+**Đối chiếu bằng chứng ngày 18/09/2026:** [Số liệu từ log API đã lưu](eval/runs/cp3-baseline-20260918/summary.json) của commit `37ccf7b` ghi nhận 12/25 khớp trạng thái và 11/25 khớp cả trạng thái lẫn chủ đề trên fixture của nhóm. Các file `src/`, `tests/`, `eval/` ở commit này và `b1486a7` giống nhau. Bộ log này không xác nhận ba tỷ lệ 56% / 72% / 88% ở bảng trên; chưa có log từng case cho ba lượt đó trong phần minh chứng kèm theo. Quality bar giữ nguyên.
 
 ## §8. Phân công & kế hoạch
 - **Phân công có tên:**
@@ -92,7 +92,7 @@ Loại: [ ] Tối ưu tính năng có sẵn  [x] Tính năng mới
   - **Tất Đạt:** Code Python Data Ingestion (Lọc Bot, Reply, Time).
   - **Hồng Cường:** AI Agent & JSON Schema Integration.
   - **Bảo Trang:** Mock UI/UX Dashboard & Slide PDF Demo.
-- **Willing users (5 tên):** Nguyễn Trần Bảo Tâm, Phan Thị Khánh Linh, Đặng Thế Vinh, Đỗ Đình Long, Nguyễn Như Tài. Hai tên cuối do nhóm bổ sung ngày 18/09/2026. [Danh sách và kịch bản validation](validation/test-plan.md); [kết quả có minh chứng](validation/README.md). Danh sách tên không thay cho bản ghi phiên dùng thử hoặc quote trực tiếp.
+- **Willing users (5 tên):** Nguyễn Trần Bảo Tâm, Phan Thị Khánh Linh, Đặng Thế Vinh, Đỗ Đình Long, Nguyễn Như Tài. Hai tên cuối do nhóm bổ sung ngày 18/09/2026. [Kịch bản và user feedback log](validation/user_feedback_log.md). Danh sách tên không thay cho bản ghi phiên dùng thử hoặc quote trực tiếp.
 - **Multi-prototype (nếu làm):** Trục khác biệt: Tương tác chủ động (Bot push noti liên tục vào kênh chat gây phiền) vs Bị động (Dashboard tĩnh tổng hợp cuối ngày). Lý do chọn phương án Bị động để TA chủ động kiểm soát thời gian, tránh làm phiền kênh chung.
 
 ## §9. Changelog
@@ -101,4 +101,4 @@ Loại: [ ] Tối ưu tính năng có sẵn  [x] Tính năng mới
 | 17/09 20:00 | Khởi tạo Spec v1.0 | Định hình hướng B2 dựa trên evidence thực tế từ `k4_daily_reports.md`. |
 | 18/09 09:30 | Hoàn thiện 8 kịch bản lỗi & HAX/PAIR | Đảm bảo phủ kín 4 lớp chỗ khó theo đúng chuẩn chấm điểm Rubric R3. |
 | 18/09 15:00 | Cập nhật kết quả Eval & siết Prompt | Đạt tỷ lệ Pass Rate 88% trên Golden Set 25 case sau khi khắc phục lỗi Lớp 2 (Mơ hồ) và Lớp 4 (Quy chế). |
-| 18/09/2026 | Cập nhật tài liệu validation và nguồn kiểm chứng | Theo yêu cầu của nhóm: thêm Đỗ Đình Long, Nguyễn Như Tài; bỏ bảng chờ điền; lưu log unit test và số liệu đã đối chiếu từ lượt API lịch sử. [Changelog validation](validation/changelog.md). Chú thích phạm vi kiểm chứng số liệu tại §7, không thay đổi quality bar. |
+| 18/09/2026 | Cập nhật tài liệu validation và nguồn kiểm chứng | Theo yêu cầu của nhóm: thêm Đỗ Đình Long, Nguyễn Như Tài; thay validation bằng một user feedback log, lưu số liệu đã đối chiếu từ lượt API lịch sử. [User feedback log](validation/user_feedback_log.md). Chú thích phạm vi kiểm chứng số liệu tại §7, không thay đổi quality bar. |
