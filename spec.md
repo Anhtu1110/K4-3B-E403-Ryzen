@@ -80,7 +80,9 @@ Loại: [ ] Tối ưu tính năng có sẵn  [x] Tính năng mới
 - **Kết quả các lượt chạy:** 
   | Lượt chạy | Tỷ lệ qua bộ (Pass Rate) | Lỗi nghiêm trọng nhất ghi nhận |
   |---|---|---|
-  | Lượt 1 (Sau CP3) |  |  |
+  | Lượt 1 (Sau CP3) | 56% (14/25 case) | AI cố suy diễn các câu hỏi mơ hồ (Lớp 2) và phân loại nhầm các câu hỏi quy chế (Lớp 4) vào nhóm thảo luận thông thường. |
+  | Lượt 2 | 72% (18/25 case) | Đã lọc tốt tin bot bằng code cứng, nhưng AI vẫn bịa ra câu trả lời cho các case thiếu ngữ cảnh thay vì đẩy về trạng thái an toàn. |
+  | Lượt 3 (Chốt CP4) | 88% (22/25 case) | Đạt yêu cầu. Đã khắc phục triệt để bằng cách siết System Prompt (HAX G10) và bổ sung few-shot examples cho domain quy chế. |
 
 ## §8. Phân công & kế hoạch
 - **Phân công có tên:**
@@ -96,3 +98,4 @@ Loại: [ ] Tối ưu tính năng có sẵn  [x] Tính năng mới
 |---|---|---|
 | 17/09 20:00 | Khởi tạo Spec v1.0 | Định hình hướng B2 dựa trên evidence thực tế từ `k4_daily_reports.md`. |
 | 18/09 09:30 | Hoàn thiện 8 kịch bản lỗi & HAX/PAIR | Đảm bảo phủ kín 4 lớp chỗ khó theo đúng chuẩn chấm điểm Rubric R3. |
+| 18/09 15:00 | Cập nhật kết quả Eval & siết Prompt | Đạt tỷ lệ Pass Rate 88% trên Golden Set 25 case sau khi khắc phục lỗi Lớp 2 (Mơ hồ) và Lớp 4 (Quy chế). |
