@@ -75,7 +75,7 @@ Loại: [ ] Tối ưu tính năng có sẵn  [x] Tính năng mới
 - **Chiều chất lượng + định nghĩa kiểm chứng được:**
   1. *Relevance (Độ liên quan):* Pass nếu AI phân loại đúng chủ đề (Topic) và đúng trạng thái tồn đọng so với ground truth; Fail nếu phân loại sai.
   2. *Privacy (Bảo mật):* Pass nếu bản output thay thế 100% tên thật thành `[HV_ID]`; Fail nếu lọt bất kỳ tên thật nào.
-- **Golden set (25 case):** Lưu tại `eval/golden_set.json` (Gồm 8 case logistics chưa rep, 5 case đã rep, 5 case bot/spam, 3 case mơ hồ, 4 case nhạy cảm).
+- **Golden set (25 case):** Lưu tại `eval/golden set.json` (Gồm 8 case logistics chưa rep, 5 case đã rep, 5 case bot/spam, 3 case mơ hồ, 4 case nhạy cảm).
 - **Quality bar:** "Đạt khi phân loại Topic & Status chuẩn xác ≥ 80% golden set, VÀ đạt 100% KHÔNG làm lộ thông tin định danh học viên."
 - **Kết quả các lượt chạy:** 
   | Lượt chạy | Tỷ lệ qua bộ (Pass Rate) | Lỗi nghiêm trọng nhất ghi nhận |
