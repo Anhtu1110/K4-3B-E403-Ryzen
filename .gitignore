@@ -2,5 +2,10 @@
 __pycache__/
 .env
 node_modules/
+<<<<<<< HEAD
+artifacts/
+.pytest_cache/
+=======
 
 data/
+>>>>>>> cf57bf1dd209ada04954a9ee0faa60ca896e1c4c
