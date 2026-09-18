@@ -35,16 +35,12 @@ class AppSettings:
     summary_channel_id: int
     audit_channel_id: int
     openai_model: str
-    max_case_cards: int
     answer_sla_minutes: int
     case_state_path: Path
 
     @classmethod
     def from_env(cls) -> "AppSettings":
         load_dotenv()
-        max_case_cards = int(os.getenv("DISCORD_MAX_CASE_CARDS", "5"))
-        if not 1 <= max_case_cards <= 10:
-            raise RuntimeError("DISCORD_MAX_CASE_CARDS phải nằm trong khoảng 1..10")
         answer_sla_minutes = int(os.getenv("RADAR_ANSWER_SLA_MINUTES", "240"))
         if not 1 <= answer_sla_minutes <= 10_080:
             raise RuntimeError("RADAR_ANSWER_SLA_MINUTES phải nằm trong khoảng 1..10080")
@@ -55,7 +51,6 @@ class AppSettings:
             summary_channel_id=int(_required("DISCORD_SUMMARY_CHANNEL_ID")),
             audit_channel_id=int(_required("DISCORD_AUDIT_CHANNEL_ID")),
             openai_model=os.getenv("OPENAI_MODEL", "gpt-4o-mini").strip() or "gpt-4o-mini",
-            max_case_cards=max_case_cards,
             answer_sla_minutes=answer_sla_minutes,
             case_state_path=Path(os.getenv("DISCORD_CASE_STATE_PATH", "artifacts/case-state.json")),
         )

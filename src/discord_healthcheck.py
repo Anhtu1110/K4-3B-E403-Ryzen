@@ -33,11 +33,19 @@ class HealthcheckClient(discord.Client):
             return
 
         print(f"CONNECTED bot={self.user} guild={guild.name}")
+        homework_channels: list[discord.TextChannel] = []
         for channel_id in sorted(self.settings.source_channel_ids):
             channel = self.get_channel(channel_id)
-            if not isinstance(channel, (discord.TextChannel, discord.Thread)):
-                self.failures.append(f"source channel {channel_id}: không tìm thấy hoặc sai loại")
-                continue
+            if isinstance(channel, discord.TextChannel) and channel.name == "homework-help":
+                homework_channels.append(channel)
+
+        if len(homework_channels) != 1:
+            self.failures.append(
+                "Cấu hình nguồn phải chứa đúng một #homework-help; "
+                "đặt DISCORD_SOURCE_CHANNEL_IDS chỉ bằng ID của channel này."
+            )
+        else:
+            channel = homework_channels[0]
             permissions = channel.permissions_for(member)
             ok = permissions.view_channel and permissions.read_message_history
             print(f"SOURCE #{channel.name}: view/read_history={'OK' if ok else 'MISSING'}")

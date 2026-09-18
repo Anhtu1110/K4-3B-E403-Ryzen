@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
 from case_store import CaseRecord, CaseStore  # noqa: E402
-from discord_ui import CaseActionView, build_case_embed, build_jump_url, build_summary_embed  # noqa: E402
+from discord_ui import CaseActionView, build_case_embed, build_jump_url  # noqa: E402
 
 
 class DiscordUiTest(unittest.TestCase):
@@ -34,24 +34,13 @@ class DiscordUiTest(unittest.TestCase):
     def test_jump_url_targets_source_message(self):
         self.assertEqual(build_jump_url(self.case), "https://discord.com/channels/456/789/123")
 
-    def test_summary_embed_displays_sla(self):
-        report = {
-            "summary": {"ANSWERED": 0, "UNANSWERED": 2, "NEEDS_TA_REVIEW": 4, "WAITING": 0},
-            "policy": {"answer_sla_minutes": 2},
-            "clusters": [],
-        }
-        embed = build_summary_embed(report, 9)
-        self.assertEqual(embed.title, "Daily Question Radar")
-        self.assertIn("2 phút", embed.description)
-        fields = {field.name: field.value for field in embed.fields}
-        self.assertEqual(fields, {"Tổng số tin nhắn": "**9**", "Chưa trả lời": "**6**"})
-
-    def test_view_has_quick_reply_but_no_snooze(self):
+    def test_view_has_answer_and_no_draft(self):
         view = CaseActionView(self.case, CaseStore(), audit_channel_id=1)
         labels = {item.label for item in view.children if hasattr(item, "label")}
 
-        self.assertIn("Trả lời nhanh", labels)
-        self.assertNotIn("Giữ lại 2 giờ", labels)
+        self.assertIn("Answer", labels)
+        self.assertNotIn("Soạn nháp", labels)
+        self.assertEqual(str(view.resolve.emoji), "✅")
         view.stop()
 
 if __name__ == "__main__":

@@ -23,7 +23,6 @@ STATUS_LABELS = {
     "NEEDS_TA_REVIEW": "CẦN TA REVIEW",
     "UNANSWERED": "CHƯA TRẢ LỜI",
     "IN_REVIEW": "ĐANG XỬ LÝ",
-    "DRAFTED": "ĐÃ CÓ BẢN NHÁP",
     "RESOLVED": "ĐÃ GIẢI QUYẾT",
     "ESCALATED": "ESCALATED",
     "SNOOZED": "THEO DÕI LẠI",
@@ -32,33 +31,6 @@ STATUS_LABELS = {
 
 def topic_label(topic: str) -> str:
     return TOPIC_LABELS.get(topic, topic.replace("_", " ").title())
-
-
-def sla_label(policy: dict[str, Any]) -> str:
-    minutes = int(policy.get("answer_sla_minutes", float(policy.get("answer_sla_hours", 4)) * 60))
-    if minutes % 60 == 0:
-        return f"{minutes // 60} giờ"
-    return f"{minutes} phút"
-
-
-def build_summary_embed(report: dict[str, Any], scanned_count: int) -> discord.Embed:
-    summary = report["summary"]
-    embed = discord.Embed(
-        title="Daily Question Radar",
-        description=(
-            "AI hỗ trợ lọc và phân loại; **TA là người quyết định cuối cùng**.\n"
-            f"SLA `{sla_label(report['policy'])}`."
-        ),
-        colour=discord.Colour.orange(),
-        timestamp=discord.utils.utcnow(),
-    )
-    unanswered_count = summary["UNANSWERED"] + summary["NEEDS_TA_REVIEW"]
-    metrics = [("Tổng số tin nhắn", scanned_count), ("Chưa trả lời", unanswered_count)]
-    for label, value in metrics:
-        embed.add_field(name=label, value=f"**{value}**", inline=True)
-
-    embed.set_footer(text="Không tự động trả lời hoặc DM học viên · dữ liệu định danh đã được che trước khi hiển thị")
-    return embed
 
 
 def build_jump_url(case: dict[str, Any]) -> str | None:
@@ -72,7 +44,6 @@ def build_case_embed(case: dict[str, Any], record: CaseRecord) -> discord.Embed:
     colours = {
         "RESOLVED": discord.Colour.green(),
         "IN_REVIEW": discord.Colour.gold(),
-        "DRAFTED": discord.Colour.gold(),
         "SNOOZED": discord.Colour.light_grey(),
         "ESCALATED": discord.Colour.red(),
     }
@@ -89,45 +60,8 @@ def build_case_embed(case: dict[str, Any], record: CaseRecord) -> discord.Embed:
     embed.add_field(name="Vì sao được đưa vào hàng đợi", value=case.get("reason", "Chưa có giải thích")[:1024], inline=False)
     if record.assigned_to:
         embed.add_field(name="TA đang xử lý", value=f"<@{record.assigned_to}>", inline=True)
-    if record.draft_reply:
-        embed.add_field(name="Bản nháp đã lưu", value=record.draft_reply[:1024], inline=False)
     embed.set_footer(text="Mở tin gốc để kiểm chứng trước khi kết luận")
     return embed
-
-
-class DraftReplyModal(discord.ui.Modal, title="Soạn bản nháp cho TA kiểm tra"):
-    draft = discord.ui.TextInput(
-        label="Bản nháp phản hồi",
-        style=discord.TextStyle.paragraph,
-        placeholder="Nhập phản hồi dự kiến. Hệ thống chỉ lưu nháp, không tự gửi cho học viên.",
-        max_length=1500,
-    )
-
-    def __init__(self, parent_view: "CaseActionView") -> None:
-        super().__init__()
-        self.parent_view = parent_view
-        existing = parent_view.store.get(parent_view.case["case_id"], parent_view.case["topic"]).draft_reply
-        if existing:
-            self.draft.default = existing
-
-    async def on_submit(self, interaction: discord.Interaction) -> None:
-        record = self.parent_view.store.transition(
-            self.parent_view.case["case_id"],
-            self.parent_view.case["topic"],
-            "DRAFTED",
-            assigned_to=str(interaction.user.id),
-            draft_reply=str(self.draft.value).strip(),
-        )
-        self.parent_view.sync_controls(record)
-        await interaction.response.send_message(
-            "Đã lưu bản nháp. Bot chưa gửi nội dung này cho học viên.", ephemeral=True
-        )
-        if self.parent_view.message:
-            await self.parent_view.message.edit(
-                embed=build_case_embed(self.parent_view.case, record),
-                view=self.parent_view,
-            )
-        await self.parent_view.audit(interaction, "saved_draft")
 
 
 class QuickReplyModal(discord.ui.Modal, title="Trả lời nhanh vào tin gốc"):
@@ -183,20 +117,6 @@ class QuickReplyModal(discord.ui.Modal, title="Trả lời nhanh vào tin gốc"
         )
 
 
-class QuickReplyButton(discord.ui.Button):
-    def __init__(self, parent_view: "CaseActionView") -> None:
-        super().__init__(
-            label="Trả lời nhanh",
-            style=discord.ButtonStyle.success,
-            row=2,
-            custom_id="radar:quick-reply",
-        )
-        self.parent_view = parent_view
-
-    async def callback(self, interaction: discord.Interaction) -> None:
-        await interaction.response.send_modal(QuickReplyModal(self.parent_view))
-
-
 class TopicSelect(discord.ui.Select):
     def __init__(self, parent_view: "CaseActionView") -> None:
         self.parent_view = parent_view
@@ -231,8 +151,6 @@ class CaseActionView(discord.ui.View):
         if jump_url:
             self.add_item(discord.ui.Button(label="Mở tin gốc", style=discord.ButtonStyle.link, url=jump_url, row=0))
         self.add_item(TopicSelect(self))
-        self.quick_reply = QuickReplyButton(self)
-        self.add_item(self.quick_reply)
         self.sync_controls(store.get(case["case_id"], case["topic"]))
 
     async def audit(self, interaction: discord.Interaction, action: str) -> None:
@@ -244,10 +162,9 @@ class CaseActionView(discord.ui.View):
             )
 
     def sync_controls(self, record: CaseRecord) -> None:
-        self.claim.disabled = record.status in {"IN_REVIEW", "DRAFTED", "RESOLVED"}
+        self.claim.disabled = record.status in {"IN_REVIEW", "RESOLVED"}
         self.resolve.disabled = record.status == "RESOLVED"
-        if hasattr(self, "quick_reply"):
-            self.quick_reply.disabled = record.status == "RESOLVED"
+        self.quick_reply.disabled = record.status == "RESOLVED"
 
     async def update(self, interaction: discord.Interaction, status: str, action: str) -> None:
         record = self.store.transition(
@@ -263,11 +180,11 @@ class CaseActionView(discord.ui.View):
     async def claim(self, interaction: discord.Interaction, _: discord.ui.Button) -> None:
         await self.update(interaction, "IN_REVIEW", "claimed")
 
-    @discord.ui.button(label="Soạn nháp", style=discord.ButtonStyle.secondary, row=0, custom_id="radar:draft")
-    async def draft_reply(self, interaction: discord.Interaction, _: discord.ui.Button) -> None:
-        await interaction.response.send_modal(DraftReplyModal(self))
+    @discord.ui.button(label="Answer", style=discord.ButtonStyle.success, row=0, custom_id="radar:quick-reply")
+    async def quick_reply(self, interaction: discord.Interaction, _: discord.ui.Button) -> None:
+        await interaction.response.send_modal(QuickReplyModal(self))
 
-    @discord.ui.button(label="Đã có phản hồi", style=discord.ButtonStyle.success, row=0, custom_id="radar:resolve")
+    @discord.ui.button(label=None, emoji="✅", style=discord.ButtonStyle.success, row=0, custom_id="radar:resolve")
     async def resolve(self, interaction: discord.Interaction, _: discord.ui.Button) -> None:
         await self.update(interaction, "RESOLVED", "resolved")
 

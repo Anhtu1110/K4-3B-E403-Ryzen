@@ -22,6 +22,11 @@ class CaseStoreTest(unittest.TestCase):
             self.assertEqual(reloaded.topic, "policy")
             self.assertEqual(json.loads(path.read_text(encoding="utf-8"))["cases"][0]["case_id"], "CASE-001")
 
+    def test_find_does_not_create_a_case(self):
+        store = CaseStore()
+
+        self.assertIsNone(store.find("CASE-unknown"))
+
 
 if __name__ == "__main__":
     unittest.main()

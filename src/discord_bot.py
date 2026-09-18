@@ -1,8 +1,7 @@
 """Discord adapter for AI Daily Question Radar.
 
-TA invokes /daily-radar to scan configured Discord channels. The bot posts an
-anonymised queue to the TA channel and only replies after a TA submits a Quick
-Reply action.
+TA invokes /daily-radar to scan #homework-help. The bot posts an anonymised
+queue to the TA channel and replies only after a TA submits a Quick Reply action.
 """
 
 from __future__ import annotations
@@ -14,7 +13,7 @@ import discord
 from discord import app_commands
 
 from case_store import CaseStore
-from discord_ui import CaseActionView, build_case_embed, build_summary_embed
+from discord_ui import CaseActionView, build_case_embed
 from radar import Message, SemanticClassifier, build_report
 from settings import AppSettings
 
@@ -71,16 +70,27 @@ class RadarBot(discord.Client):
 
     async def fetch_source_messages(self, before_hours: int) -> list[Message]:
         after = discord.utils.utcnow() - timedelta(hours=before_hours)
-        records: list[Message] = []
+        homework_channels: list[discord.TextChannel] = []
         for channel_id in self.settings.source_channel_ids:
             channel = self.get_channel(channel_id)
-            if not isinstance(channel, (discord.TextChannel, discord.Thread)):
+            if not isinstance(channel, discord.TextChannel):
                 raise RuntimeError(
-                    f"Không thấy text channel/thread nguồn {channel_id}; kiểm tra ID và quyền View Channel."
+                    f"Không thấy text channel nguồn {channel_id}; kiểm tra ID và quyền View Channel."
                 )
-            async for message in channel.history(after=after, oldest_first=True, limit=None):
-                records.append(to_radar_message(message))
-        return sorted(records, key=lambda item: item.created_at)
+            if channel.name == "homework-help":
+                homework_channels.append(channel)
+
+        if len(homework_channels) != 1:
+            raise RuntimeError(
+                "Cấu hình nguồn phải chứa đúng một channel #homework-help. "
+                "Hãy đặt DISCORD_SOURCE_CHANNEL_IDS chỉ bằng ID của #homework-help."
+            )
+
+        records: dict[str, Message] = {}
+        channel = homework_channels[0]
+        async for message in channel.history(after=after, oldest_first=True, limit=None):
+            records.setdefault(str(message.id), to_radar_message(message))
+        return sorted(records.values(), key=lambda item: item.created_at)
 
     async def run_daily_radar(
         self,
@@ -123,21 +133,25 @@ class RadarBot(discord.Client):
             if not isinstance(audit_channel, discord.TextChannel):
                 raise RuntimeError("Không tìm thấy audit channel; kiểm tra ID và quyền bot.")
 
-            await summary_channel.send(
-                embed=build_summary_embed(report, len(messages))
-            )
-            actionable = [
+            candidate_cases = [
                 item
                 for item in report["decisions"]
                 if item["status"] in {"NEEDS_TA_REVIEW", "UNANSWERED"}
             ]
-            actionable.sort(
+            candidate_cases.sort(
                 key=lambda item: (
                     item["status"] != "NEEDS_TA_REVIEW",
                     -int(item.get("age_minutes", 0)),
                 )
             )
-            for case in actionable[: self.settings.max_case_cards]:
+            actionable = []
+            for case in candidate_cases:
+                existing = self.case_store.find(case["case_id"])
+                if existing and existing.status == "RESOLVED":
+                    continue
+                actionable.append(case)
+
+            for case in actionable:
                 record = self.case_store.get(case["case_id"], case["topic"])
                 view = CaseActionView(
                     case,
@@ -151,13 +165,12 @@ class RadarBot(discord.Client):
 
             await audit_channel.send(
                 f"radar_run · actor `{interaction.user.id}` · scanned `{len(messages)}` · "
-                f"posted `{min(len(actionable), self.settings.max_case_cards)}` · "
+                f"posted `{len(actionable)}` · "
                 f"result `{report['summary']}`"
             )
             await interaction.followup.send(
-                f"Đã kết nối và đăng bản tin vào <#{self.settings.summary_channel_id}>. "
-                f"Có `{len(actionable)}` case cần chú ý; đã hiển thị tối đa "
-                f"`{self.settings.max_case_cards}` case.",
+                f"Đã quét #homework-help và đăng `{len(actionable)}` case cần xử lý vào "
+                f"<#{self.settings.summary_channel_id}>.",
                 ephemeral=True,
             )
         except Exception as error:

@@ -10,6 +10,7 @@ from radar import (  # noqa: E402
     SemanticClassifier,
     anon_id,
     case_id,
+    build_report,
     is_announcement,
     mask_sensitive_text,
     response_candidates,
@@ -93,6 +94,67 @@ class RadarRulesTest(unittest.TestCase):
             first_schema["properties"]["items"]["items"]["properties"]["msg_id"]["enum"],
             ["Q1", "Q2"],
         )
+
+    def test_direct_reply_excludes_question_before_classification(self):
+        class FailIfClassified:
+            model = "test"
+
+            def classify_questions(self, candidates):
+                if candidates:
+                    raise AssertionError("A directly replied question must not be classified")
+                return {}
+
+            def answer_adequacy(self, question, replies):
+                raise AssertionError("A directly replied question must not be assessed")
+
+        question = message("Q1", "D1", "2026-09-12 09:00")
+        reply = message("R1", "D2", "2026-09-12 09:01", reply_to="Q1")
+        report = build_report(
+            [question, reply],
+            FailIfClassified(),
+            datetime.strptime("2026-09-12 10:00", "%Y-%m-%d %H:%M"),
+            0.85,
+        )
+
+        self.assertEqual(report["decisions"], [])
+        self.assertIn(
+            {"msg_id": "Q1", "result": "DIRECT_REPLY_EXISTS", "reply_msg_ids": ["R1"]},
+            report["audit"],
+        )
+
+    def test_duplicate_source_message_is_classified_once(self):
+        class OneQuestionClassifier:
+            model = "test"
+
+            def classify_questions(self, candidates):
+                self.seen_ids = [item.msg_id for item in candidates]
+                return {
+                    item.msg_id: {
+                        "is_question": True,
+                        "topic": "lab",
+                        "intent_key": "lỗi cài đặt",
+                        "confidence": 1.0,
+                        "needs_official_source": False,
+                        "reason": "cần hỗ trợ",
+                    }
+                    for item in candidates
+                }
+
+            def answer_adequacy(self, question, replies):
+                return {"answered": False, "adequate_reply_ids": [], "reason": "no reply"}
+
+        classifier = OneQuestionClassifier()
+        question = message("Q1", "D1", "2026-09-12 09:00")
+        report = build_report(
+            [question, question],
+            classifier,
+            datetime.strptime("2026-09-12 10:00", "%Y-%m-%d %H:%M"),
+            0.85,
+        )
+
+        self.assertEqual(classifier.seen_ids, ["Q1"])
+        self.assertEqual(len(report["decisions"]), 1)
+        self.assertIn({"msg_id": "Q1", "result": "DUPLICATE_SOURCE_MESSAGE"}, report["audit"])
 
 
 if __name__ == "__main__":

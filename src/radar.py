@@ -222,6 +222,7 @@ def build_report(
     answer_sla = timedelta(minutes=answer_sla_minutes)
     by_reply_to: dict[str, list[Message]] = defaultdict(list)
     roots: list[Message] = []
+    root_ids: set[str] = set()
     audit: list[dict[str, Any]] = []
     for item in messages:
         if item.reply_to:
@@ -230,12 +231,29 @@ def build_report(
             audit.append({"msg_id": item.msg_id, "result": "SYSTEM_OR_BOT"})
         elif item.msg_type == "reply":
             audit.append({"msg_id": item.msg_id, "result": "REPLY_CONTEXT_ONLY"})
+        elif item.msg_id in root_ids:
+            audit.append({"msg_id": item.msg_id, "result": "DUPLICATE_SOURCE_MESSAGE"})
         else:
             roots.append(item)
+            root_ids.add(item.msg_id)
 
-    classified = classifier.classify_questions(roots)
-    decisions: list[dict[str, Any]] = []
+    # A direct Discord reply is an explicit workflow signal: never send that
+    # source message to the AI or show it again in the TA queue.
+    unanswered_roots: list[Message] = []
     for question in roots:
+        direct_replies = by_reply_to.get(question.msg_id, [])
+        if direct_replies:
+            audit.append({
+                "msg_id": question.msg_id,
+                "result": "DIRECT_REPLY_EXISTS",
+                "reply_msg_ids": [item.msg_id for item in direct_replies],
+            })
+            continue
+        unanswered_roots.append(question)
+
+    classified = classifier.classify_questions(unanswered_roots)
+    decisions: list[dict[str, Any]] = []
+    for question in unanswered_roots:
         ai = classified[question.msg_id]
         if not ai["is_question"]:
             audit.append({"msg_id": question.msg_id, "result": "NO_ACTION", "reason": ai["reason"]})
