@@ -21,7 +21,6 @@ Nhật ký ghi nhận kết quả thử nghiệm thực tế từ 5 thành viên
 
 ### V01 - Nguyễn Trần Bảo Tâm
 
-- **Mã học viên:** Ryzen-E403
 - **Vai trò khi thử:** Học viên / TA
 - **Thời lượng / Phiên bản:** 0.5 giờ (30 phút) | Baseline v1.0
 - **Task đã giao:** 
@@ -40,7 +39,6 @@ Nhật ký ghi nhận kết quả thử nghiệm thực tế từ 5 thành viên
 
 ### V02 - Phan Thị Khánh Linh
 
-- **Mã học viên:** Khánh Linh
 - **Vai trò khi thử:** Mod / TA
 - **Thời lượng / Phiên bản:** 1.0 giờ (60 phút) | Baseline v1.0
 - **Task đã giao:** 
@@ -58,8 +56,6 @@ Nhật ký ghi nhận kết quả thử nghiệm thực tế từ 5 thành viên
 ---
 
 ### V03 - Đặng Thế Vinh
-
-- **Mã học viên:** Đặng Ý Vinh
 - **Vai trò khi thử:** Học viên
 - **Thời lượng / Phiên bản:** 1.0 giờ (60 phút) | Baseline v1.0
 - **Task đã giao:** 
@@ -78,7 +74,6 @@ Nhật ký ghi nhận kết quả thử nghiệm thực tế từ 5 thành viên
 
 ### V04 - Đỗ Đình Long
 
-- **Mã học viên:** B Đình Long
 - **Vai trò khi thử:** TA
 - **Thời lượng / Phiên bản:** 1.0 giờ (60 phút) | Baseline v1.0
 - **Task đã giao:** 
@@ -97,7 +92,6 @@ Nhật ký ghi nhận kết quả thử nghiệm thực tế từ 5 thành viên
 
 ### V05 - Nguyễn Như Tài
 
-- **Mã học viên:** Nguyễn Như
 - **Vai trò khi thử:** Mod
 - **Thời lượng / Phiên bản:** 2.0 giờ (120 phút) | Baseline v1.0
 - **Task đã giao:** 
